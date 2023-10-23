@@ -47,4 +47,5 @@ public class PlayerHealth : MonoBehaviour
         healthBar.UpdateHealthBar(health, maxHealth);
     }
 
+    
 }

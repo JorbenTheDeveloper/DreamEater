@@ -155,5 +155,11 @@ public class PlayerMovement : MonoBehaviour
             // Destroy the barrier GameObject
             Destroy(collision.gameObject);
         }
+
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            Debug.Log("hit");
+            health -= 1;
+        }
     }
 }

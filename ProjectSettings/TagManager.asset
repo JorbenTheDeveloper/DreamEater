@@ -11,6 +11,7 @@ TagManager:
   - NotEnemy
   - Win
   - Barrier
+  - Projectile
   layers:
   - Default
   - TransparentFX

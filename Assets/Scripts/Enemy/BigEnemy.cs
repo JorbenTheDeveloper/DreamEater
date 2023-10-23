@@ -201,13 +201,11 @@ public class BigEnemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collision detected");
         healthBar.gameObject.SetActive(true);
 
         if (rush)
         {
             health -= 1;
-            Debug.Log("Health Decreased. Current Health: " + health);
             healthBar.UpdateHealthBar(health, maxHealth);
         }
     }
