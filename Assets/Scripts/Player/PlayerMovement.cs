@@ -26,7 +26,12 @@ public class PlayerMovement : MonoBehaviour
     public float rushCost;
     public float chargeRate;
 
+    public float knockbackForce = 5f; // Adjust this value for the knockback strength
+
     private Coroutine recharge;
+
+    public PlayerHealth playerHealth;
+    public int projectileDamage;
 
     void Start()
     {
@@ -135,6 +140,7 @@ public class PlayerMovement : MonoBehaviour
         {
             print("*Gulp*");
             score += 5;
+            Knockback(collision.transform);
             Destroy(collision.gameObject);
         }
 
@@ -142,6 +148,7 @@ public class PlayerMovement : MonoBehaviour
         {
             print("Object");
             score += 1;
+            Knockback(collision.transform);
             Destroy(collision.gameObject);
         }
 
@@ -159,7 +166,13 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Projectile"))
         {
             Debug.Log("hit");
-            health -= 1;
+            playerHealth.TakeDamage(projectileDamage);
         }
+    }
+
+    private void Knockback(Transform enemyTransform)
+    {
+        Vector2 knockbackDirection = (enemyTransform.position - transform.position).normalized;
+        enemyTransform.GetComponent<Rigidbody2D>().velocity = knockbackDirection * knockbackForce;
     }
 }
