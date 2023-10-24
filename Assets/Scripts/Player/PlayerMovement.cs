@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     public TMP_Text score_text;
 
     public float maxSpeed = 10f;
-    public float health;
     public Collision2D body;
 
     public Image StaminaBar;
@@ -26,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public float rushCost;
     public float chargeRate;
 
-    public float knockbackForce = 5f; // Adjust this value for the knockback strength
+    public float knockbackForce = 5f;
 
     private Coroutine recharge;
 
@@ -138,18 +137,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") && rush)
         {
-            print("*Gulp*");
+            Debug.Log("*Gulp*");
             score += 5;
             Knockback(collision.transform);
             Destroy(collision.gameObject);
         }
 
-        if (collision.gameObject.CompareTag("Object") && rush)
+        if (collision.gameObject.CompareTag("Rock") && rush)
         {
-            print("Object");
+            Debug.Log("Rock");
             score += 1;
             Knockback(collision.transform);
-            Destroy(collision.gameObject);
         }
 
         if (collision.gameObject.CompareTag("Win"))
@@ -163,6 +161,13 @@ public class PlayerMovement : MonoBehaviour
             Destroy(collision.gameObject);
         }
 
+        if (collision.gameObject.CompareTag("Object"))
+        {
+            // Destroy the barrier GameObject
+            score += 1;
+            Destroy(collision.gameObject);
+        }
+
         if (collision.gameObject.CompareTag("Projectile"))
         {
             Debug.Log("hit");
@@ -170,9 +175,40 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void Knockback(Transform enemyTransform)
+    private void Knockback(Transform targetTransform)
     {
-        Vector2 knockbackDirection = (enemyTransform.position - transform.position).normalized;
-        enemyTransform.GetComponent<Rigidbody2D>().velocity = knockbackDirection * knockbackForce;
+        Vector2 knockbackDirection = (targetTransform.position - transform.position).normalized;
+        Rigidbody2D targetRigidbody = targetTransform.GetComponent<Rigidbody2D>();
+
+        // Ensure that the target has a Rigidbody2D component
+        if (targetRigidbody != null)
+        {
+            StartCoroutine(KnockbackCoroutine(targetRigidbody, knockbackDirection));
+        }
+    }
+
+    private IEnumerator KnockbackCoroutine(Rigidbody2D targetRigidbody, Vector2 knockbackDirection)
+    {
+        float knockbackDuration = 0.5f; // Adjust this duration as needed
+        float slowdownFactor = 0.4f; // Adjust this factor to control slowdown
+
+        float timer = 0f;
+
+        while (timer < knockbackDuration)
+        {
+            timer += Time.fixedDeltaTime;
+            targetRigidbody.velocity = knockbackDirection * knockbackForce;
+            yield return new WaitForFixedUpdate();
+        }
+
+        // Slow down before stopping
+        while (targetRigidbody.velocity.magnitude > 0.01f)
+        {
+            targetRigidbody.velocity *= slowdownFactor;
+            yield return new WaitForFixedUpdate();
+        }
+
+        targetRigidbody.velocity = Vector2.zero;
     }
 }
+

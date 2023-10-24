@@ -164,11 +164,11 @@ public class BigEnemy : MonoBehaviour
         }
 
         // Schedule a method to switch the tag back, enable the renderer, and the health bar
-        Invoke("SwitchTagBackAndEnableRenderer", 2f);
+        Invoke("SwitchTagBackAndEnableRenderer", 0.5f);
 
         // Move the Destroy call here or after the loop to avoid issues
         isCreated = true;
-        Destroy(gameObject, 2f); // Destroy after 2 seconds
+        Destroy(gameObject, 0.5f); // Destroy after 2 seconds
     }
 
     void SwitchTagBackAndEnableRenderer()
