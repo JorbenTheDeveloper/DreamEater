@@ -17,6 +17,11 @@ public class Carrot : MonoBehaviour
     // Directly assign the healthBar in the Inspector
     public FloatingHealthBar healthBar;
 
+    // New variable for the detection area transform
+    public Transform detectionAreaTransform;
+
+    private Collider2D detectionAreaCollider;
+
     private float nextShootTime;
 
     private void Start()
@@ -28,14 +33,33 @@ public class Carrot : MonoBehaviour
 
         healthBar.gameObject.SetActive(false);
         healthBar.UpdateHealthBar(health, maxHealth);
+
+        if (detectionAreaTransform == null)
+        {
+            Debug.LogError("DetectionAreaTransform not assigned. Please assign it in the Inspector.");
+            return;
+        }
+
+        // Find the Collider2D component in the child (detection area)
+        detectionAreaCollider = detectionAreaTransform.GetComponent<Collider2D>();
+
+        if (detectionAreaCollider == null)
+        {
+            Debug.LogError("Collider2D not found on the DetectionAreaTransform. Please make sure it has a Collider2D component.");
+        }
     }
+
     void Update()
     {
-        // Rotate the enemy in place
-        RotateEnemy();
+        // Check if the player is within the detection area
+        if (IsPlayerInDetectionArea())
+        {
+            // Rotate the enemy in place
+            RotateEnemy();
 
-        // Shoot projectiles at regular intervals
-        ShootProjectiles();
+            // Shoot projectiles at regular intervals
+            ShootProjectiles();
+        }
 
         rush = Input.GetMouseButton(0);
 
@@ -68,17 +92,46 @@ public class Carrot : MonoBehaviour
                 projectileRb.AddForce(projectileSpawnPoint.up * projectileSpeed, ForceMode2D.Impulse);
             }
 
+            // Destroy the projectile after 5 seconds
+            Destroy(projectile, 5f);
+
             // Update the next shoot time
             nextShootTime = Time.time + shootInterval;
         }
     }
 
+    bool IsPlayerInDetectionArea()
+    {
+        // Check if there's a Collider2D assigned for detection
+        if (detectionAreaCollider == null)
+        {
+            Debug.LogError("Collider2D not found on the DetectionAreaTransform. Please make sure it has a Collider2D component.");
+            return false;
+        }
+
+        // Use a list to collect overlapping colliders
+        List<Collider2D> colliders = new List<Collider2D>();
+
+        // Use Physics2D.OverlapCollider to find colliders in the detection area
+        int colliderCount = detectionAreaCollider.OverlapCollider(new ContactFilter2D(), colliders);
+
+        // Check if any of the overlapping colliders have the "Player" tag
+        for (int i = 0; i < colliderCount; i++)
+        {
+            if (colliders[i].CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
         healthBar.gameObject.SetActive(true);
 
-        if (rush == true)
+        if (rush)
         {
             health -= 1;
             healthBar.UpdateHealthBar(health, maxHealth);
