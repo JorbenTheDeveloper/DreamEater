@@ -466,7 +466,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -572,7 +572,7 @@ PrefabInstance:
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: movementPoints.Array.size
       value: 5
@@ -8871,6 +8871,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1700367836}
     m_Modifications:
+    - target: {fileID: 3913119060244437627, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 1034420337}
     - target: {fileID: 8984512921136663680, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: m_Name
       value: RabbitEnemy (1)
@@ -8919,6 +8923,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: movementPoints.Array.size
       value: 5
@@ -9007,7 +9015,7 @@ PrefabInstance:
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: movementPoints.Array.size
       value: 5
@@ -9102,7 +9110,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -9534,6 +9542,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1700367836}
     m_Modifications:
+    - target: {fileID: 3913119060244437627, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 1034420337}
     - target: {fileID: 8984512921136663680, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: m_Name
       value: RabbitEnemy (2)
@@ -9582,6 +9594,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: movementPoints.Array.size
       value: 5
@@ -9742,7 +9758,7 @@ PrefabInstance:
     - target: {fileID: 2762158602391775588, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 4059605824896221960, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -10604,7 +10620,7 @@ PrefabInstance:
     - target: {fileID: 2762158602391775588, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 4059605824896221960, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: m_RootOrder
       value: 14
@@ -10972,7 +10988,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -11156,7 +11172,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -11627,10 +11643,10 @@ MonoBehaviour:
   StaminaBar: {fileID: 1137989128}
   Stamina: 5000
   maxStamina: 5000
-  rushCost: 25
+  rushCost: 10
   chargeRate: 600
   knockbackForce: 5
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 1034420337}
   projectileDamage: 1
 --- !u!4 &1042472231 stripped
 Transform:
@@ -11933,7 +11949,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -15410,7 +15426,7 @@ PrefabInstance:
     - target: {fileID: 2762158602391775588, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 4059605824896221960, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -15529,6 +15545,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1700367836}
     m_Modifications:
+    - target: {fileID: 3913119060244437627, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 1034420337}
     - target: {fileID: 8984512921136663680, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: m_Name
       value: RabbitEnemy
@@ -15577,6 +15597,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: movementPoints.Array.size
       value: 5
@@ -15675,7 +15699,7 @@ PrefabInstance:
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: movementPoints.Array.size
       value: 5
@@ -16156,7 +16180,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -16794,7 +16818,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -17304,6 +17328,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1700367836}
     m_Modifications:
+    - target: {fileID: 3913119060244437627, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 1034420337}
     - target: {fileID: 8984512921136663680, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: m_Name
       value: RabbitEnemy (3)
@@ -17352,6 +17380,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 8984512921136663692, guid: f2babfc32d3b29a4a8491b70734dbc02, type: 3}
       propertyPath: movementPoints.Array.size
       value: 5
@@ -17467,7 +17499,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
@@ -18206,7 +18238,7 @@ PrefabInstance:
     - target: {fileID: 2762158602391775588, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 4059605824896221960, guid: 185a1890eb980f642b7b423ed2d49806, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -18360,7 +18392,7 @@ PrefabInstance:
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1034420338}
+      objectReference: {fileID: 1034420340}
     - target: {fileID: 1351880459474119544, guid: 85a72edbf9a8ac04c9f0e7008f73b75c, type: 3}
       propertyPath: movementPoints.Array.size
       value: 7
