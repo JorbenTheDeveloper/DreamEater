@@ -378,8 +378,9 @@ GameObject:
   - component: {fileID: 1714479969416199385}
   - component: {fileID: 1714479969416199384}
   - component: {fileID: 1714479969416199387}
+  - component: {fileID: -4976330665154409084}
   m_Layer: 0
-  m_Name: Carrot 1
+  m_Name: Carrot
   m_TagString: Rock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,6 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14473775a7862e040b6f04a34c95d3e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  size: 1
   rotationSpeed: 60
   shootInterval: 1
   projectileSpawnPoint: {fileID: 1714479969859692865}
@@ -504,6 +506,19 @@ PolygonCollider2D:
     - - {x: 0, y: 0.5773587}
       - {x: -0.5, y: -0.28866667}
       - {x: 0.5, y: -0.28866667}
+--- !u!114 &-4976330665154409084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1714479969416199391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 2
 --- !u!1 &1714479969859692864
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public float size = 1.0f;
     private Camera mainCamera;
     private Transform m_transform;
     private bool rush = false;
@@ -135,9 +136,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        SizeScript sizeScript = collision.gameObject.GetComponent<SizeScript>();
+
+        if (sizeScript != null && sizeScript.size <= size && rush)
+        {
+            // Check if the collision object has a health bar
+            FloatingHealthBar enemyHealthBar = collision.gameObject.GetComponent<FloatingHealthBar>();
+
+            if (enemyHealthBar != null)
+            {
+                // Destroy the enemy immediately
+                Destroy(collision.gameObject);
+                score += 10; // Adjust the score as needed
+                return; // Don't execute the other checks if the object is eaten
+            }
+
+            Debug.Log("*Nom nom*");
+            score += 10; // Adjust the score as needed
+            Destroy(collision.gameObject);
+            return; // Don't execute the other checks if the object is eaten
+        }
+
         if (collision.gameObject.CompareTag("Enemy") && rush)
         {
-            Debug.Log("*Gulp*");
+            
             score += 5;
             Knockback(collision.transform);
             Destroy(collision.gameObject);
@@ -145,7 +167,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Rock") && rush)
         {
-            Debug.Log("Rock");
+            
             score += 1;
             Knockback(collision.transform);
         }
@@ -194,21 +216,30 @@ public class PlayerMovement : MonoBehaviour
 
         float timer = 0f;
 
-        while (timer < knockbackDuration)
+        while (timer < knockbackDuration && targetRigidbody != null) // Add null check here
         {
             timer += Time.fixedDeltaTime;
-            targetRigidbody.velocity = knockbackDirection * knockbackForce;
+
+            if (targetRigidbody != null) // Double-check for safety
+            {
+                targetRigidbody.velocity = knockbackDirection * knockbackForce;
+            }
+
             yield return new WaitForFixedUpdate();
         }
 
-        // Slow down before stopping
-        while (targetRigidbody.velocity.magnitude > 0.01f)
+        // Double-check for safety
+        if (targetRigidbody != null)
         {
-            targetRigidbody.velocity *= slowdownFactor;
-            yield return new WaitForFixedUpdate();
-        }
+            // Slow down before stopping
+            while (targetRigidbody.velocity.magnitude > 0.01f)
+            {
+                targetRigidbody.velocity *= slowdownFactor;
+                yield return new WaitForFixedUpdate();
+            }
 
-        targetRigidbody.velocity = Vector2.zero;
+            targetRigidbody.velocity = Vector2.zero;
+        }
     }
 }
 

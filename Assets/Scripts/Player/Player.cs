@@ -12,6 +12,10 @@ public class Player : MonoBehaviour
     private bool isRecharging = false; // Added flag to track if recharging is in progress
     private float rechargeTimer = 0f;
 
+    private bool isAttaching = false; // Flag to track if attaching to enemy is in progress
+    private float attachTimer = 0f;
+    private GameObject attachedEnemy; // Reference to the attached enemy
+
     public int score = 0;
     public TMP_Text score_text;
 
@@ -24,9 +28,6 @@ public class Player : MonoBehaviour
     public float maxStamina;
     public float rushCost;
     public float chargeRate;
-
-
-    private Coroutine recharge;
 
     // Start is called before the first frame update
     void Start()
@@ -80,7 +81,6 @@ public class Player : MonoBehaviour
             maxSpeed = 10f;
             rush = true;
 
-
             Stamina -= rushCost;
             StaminaBar.fillAmount = Stamina / maxStamina;
 
@@ -96,11 +96,30 @@ public class Player : MonoBehaviour
             rush = false;
         }
 
+        // Check if the player presses "E" and is not currently attaching or rushing
+        if (Input.GetKeyDown(KeyCode.E) && !isAttaching && !rush)
+        {
+            TryAttachToEnemy();
+        }
+
+        // If attaching, start draining health every second
+        if (isAttaching)
+        {
+            attachTimer += Time.deltaTime;
+
+            // Check if the attachment duration has reached 3 seconds
+            if (attachTimer >= 3f)
+            {
+                DetachFromEnemy();
+            }
+            else
+            {
+                DrainEnemyHealth();
+            }
+        }
+
         score_text.SetText(score.ToString());
     }
-
-
-
 
     private void FollowMousePositionDelayed(float maxSpeed)
     {
@@ -121,22 +140,41 @@ public class Player : MonoBehaviour
         m_transform.rotation = rotation;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void TryAttachToEnemy()
     {
-        if (collision.gameObject.CompareTag("Enemy") && rush)
-        {
-            print("*Gulp*");
-            score += 5;
-            Destroy(collision.gameObject);
-        }
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, m_transform.up, 1f, LayerMask.GetMask("Enemy"));
 
-        if (collision.gameObject.CompareTag("Object") && rush)
+        if (hit.collider != null)
         {
-            print("Object");
-            score += 1;
-            Destroy(collision.gameObject);
+            // Attach to the enemy
+            isAttaching = true;
+            attachedEnemy = hit.collider.gameObject;
         }
     }
 
-    
+    private void DrainEnemyHealth()
+    {
+        // Check if there's an attached enemy
+        if (attachedEnemy != null)
+        {
+            // Get the enemy's health script
+            EnemyHealth enemyHealth = attachedEnemy.GetComponent<EnemyHealth>();
+
+            // Drain the enemy's health every second
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(1);
+            }
+        }
+    }
+
+    private void DetachFromEnemy()
+    {
+        // Reset the attaching-related variables
+        isAttaching = false;
+        attachTimer = 0f;
+        attachedEnemy = null;
+    }
 }
+    
+

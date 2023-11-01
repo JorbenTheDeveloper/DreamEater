@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public float size = 1.0f;
+
     [SerializeField]
     private Transform[] movementPoints;
     

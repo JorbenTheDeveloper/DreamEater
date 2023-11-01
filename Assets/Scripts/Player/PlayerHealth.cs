@@ -21,7 +21,7 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        // You can add any additional update logic here if needed
     }
 
     public void TakeDamage(int amount)
@@ -31,21 +31,23 @@ public class PlayerHealth : MonoBehaviour
 
         if (health <= 0)
         {
-            SceneManager.LoadScene("Retry");
-            Destroy(gameObject);
+            Die();
         }
     }
 
-    // Method to restore health
-    public void RestoreHealth(int amount)
+    public void Heal(int amount)
     {
         health += amount;
 
-        // Ensure that the health does not exceed the maxHealth
+        // Ensure health doesn't exceed the maximum
         health = Mathf.Min(health, maxHealth);
 
         healthBar.UpdateHealthBar(health, maxHealth);
     }
 
-    
+    void Die()
+    {
+        SceneManager.LoadScene("Retry");
+        Destroy(gameObject);
+    }
 }
