@@ -139,10 +139,10 @@ public class Tier2Carrot : MonoBehaviour
 
         if (playerSizeScript != null)
         {
-            Debug.Log($"Player Size: {playerSizeScript.size}, Carrot Size: {size}");
+            Debug.Log($"Player Size: {playerSizeScript.scale}, Carrot Size: {size}");
         }
 
-        if (playerSizeScript != null && playerSizeScript.size >= size && rush)
+        if (playerSizeScript != null && playerSizeScript.scale >= size && rush)
         {
             // The player is the same size or larger, destroy the CarrotEnemy
             Debug.Log("Destroyed Carrot");

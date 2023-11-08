@@ -7,7 +7,7 @@ public class Carrot : MonoBehaviour
     public float size = 1.0f;
     public float rotationSpeed = 50f;
     public float shootInterval = 2f;
-    public Transform projectileSpawnPoint;
+    public Transform[] projectileSpawnPoints;
     public GameObject projectilePrefab;
     public float projectileSpeed = 5f;
 
@@ -80,21 +80,25 @@ public class Carrot : MonoBehaviour
     {
         if (Time.time > nextShootTime)
         {
-            // Instantiate a projectile at the spawn point
-            GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
-
-            // Get the Rigidbody2D component
-            Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
-
-            // Check if a Rigidbody2D is attached to the projectile
-            if (projectileRb != null)
+            // Iterate through each projectile spawn point
+            foreach (Transform spawnPoint in projectileSpawnPoints)
             {
-                // Apply force to move the projectile
-                projectileRb.AddForce(projectileSpawnPoint.up * projectileSpeed, ForceMode2D.Impulse);
-            }
+                // Instantiate a projectile at the spawn point
+                GameObject projectile = Instantiate(projectilePrefab, spawnPoint.position, spawnPoint.rotation);
 
-            // Destroy the projectile after 5 seconds
-            Destroy(projectile, 5f);
+                // Get the Rigidbody2D component
+                Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
+
+                // Check if a Rigidbody2D is attached to the projectile
+                if (projectileRb != null)
+                {
+                    // Apply force to move the projectile
+                    projectileRb.AddForce(spawnPoint.up * projectileSpeed, ForceMode2D.Impulse);
+                }
+
+                // Destroy the projectile after 5 seconds
+                Destroy(projectile, 5f);
+            }
 
             // Update the next shoot time
             nextShootTime = Time.time + shootInterval;
@@ -136,10 +140,10 @@ public class Carrot : MonoBehaviour
 
         if (playerSizeScript != null)
         {
-            Debug.Log($"Player Size: {playerSizeScript.size}, Carrot Size: {size}");
+            Debug.Log($"Player Size: {playerSizeScript.scale}, Carrot Size: {size}");
         }
 
-        if (playerSizeScript != null && playerSizeScript.size >= size && rush)
+        if (playerSizeScript != null && playerSizeScript.scale >= size && rush)
         {
             // The player is the same size or larger, destroy the CarrotEnemy
             Debug.Log("Destroyed Carrot");

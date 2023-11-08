@@ -39,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Coroutine variable")]
     // Coroutine Variables
     private Coroutine recharge;
+    public TMP_Text rechargeTimerText;
 
     [Header("External References")]
     // External References
@@ -59,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
         mainCamera = Camera.main;
         m_transform = transform;
 
-        sizeText.text = "Size: " + sizeScript.size.ToString("F1");
+        sizeText.text = "Size: " + sizeScript.scale.ToString("F1");
 
         if (cinemachineVirtualCamera != null)
         {
@@ -69,6 +70,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        rechargeTimerText.text = rechargeTimer.ToString("F1");
+
         // Stamina Logic
         if (!isRecharging)
         {
@@ -80,13 +83,14 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Stamina = maxStamina;
                     StaminaBar.fillAmount = Stamina / maxStamina;
+
                 }
                 StaminaBar.fillAmount = Stamina / maxStamina;
             }
             else
             {
                 isRecharging = true;
-                rechargeTimer = 3f;
+                rechargeTimer = 2f;
             }
         }
         else
@@ -140,14 +144,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Update the size label
-        sizeText.text = "Size: " + sizeScript.size.ToString("F1");
+        sizeText.text = "Size: " + sizeScript.scale.ToString("F1");
 
         if (cinemachineVirtualCamera != null)
         {
             cinemachineVirtualCamera.m_Lens.OrthographicSize = initialCameraSize + size;
         }
 
-        sizeScript.size = size;
+        sizeScript.scale = size;
 
         // Update the score text as a fraction of 50
         score_text.SetText(string.Format("{0}/{1}", score, pointsToIncreaseScale));
@@ -194,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
     {
         SizeScript sizeScript = collision.gameObject.GetComponent<SizeScript>();
 
-        if (sizeScript != null && sizeScript.size <= size && rush)
+        if (rush && sizeScript != null && sizeScript.scale <= size)
         {
             // Check if the collision object has a health bar
             FloatingHealthBar enemyHealthBar = collision.gameObject.GetComponent<FloatingHealthBar>();
@@ -203,19 +207,18 @@ public class PlayerMovement : MonoBehaviour
             {
                 // Destroy the enemy immediately
                 Destroy(collision.gameObject);
-                score += 10; // Adjust the score as needed
+                sizeScript.DestroyObject(); // Update player's score and destroy the object
                 return; // Don't execute the other checks if the object is eaten
             }
 
             Debug.Log("*Nom nom*");
-            score += 10; // Adjust the score as needed
-            Destroy(collision.gameObject);
+            sizeScript.DestroyObject(); // Update player's score and destroy the object
             return; // Don't execute the other checks if the object is eaten
         }
 
         if (collision.gameObject.CompareTag("Enemy") && rush)
         {
-            score += 5;
+            //score += 5;
             Knockback(collision.transform);
             Destroy(collision.gameObject);
         }
@@ -237,10 +240,10 @@ public class PlayerMovement : MonoBehaviour
             Destroy(collision.gameObject);
         }
 
-        if (collision.gameObject.CompareTag("Object"))
+        if (collision.gameObject.CompareTag("Object") && rush)
         {
             // Destroy the barrier GameObject
-            score += 1;
+            //score += 1;
             Destroy(collision.gameObject);
         }
 
@@ -305,6 +308,17 @@ public class PlayerMovement : MonoBehaviour
     {
         size += scaleIncreaseAmount;
         transform.localScale = new Vector3(size, size, 1.0f);
+    }
+
+    public int Score
+    {
+        get { return score; }
+        set { score = value; }
+    }
+
+    public float Size
+    {
+        get { return size; }
     }
 }
 

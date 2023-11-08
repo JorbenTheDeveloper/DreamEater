@@ -216,7 +216,7 @@ public class BigEnemy : MonoBehaviour
 
             if (playerSizeScript != null)
             {
-                Debug.Log($"Player Size: {playerSizeScript.size}, Carrot Size: {size}");
+                Debug.Log($"Player Size: {playerSizeScript.scale}, Carrot Size: {size}");
             }
 
             

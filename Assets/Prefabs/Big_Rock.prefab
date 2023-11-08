@@ -407,6 +407,7 @@ GameObject:
   - component: {fileID: 3755022157558340111}
   - component: {fileID: 3755022157558340146}
   - component: {fileID: 3755022157558340147}
+  - component: {fileID: 6921138393465752288}
   m_Layer: 0
   m_Name: Big_Rock
   m_TagString: Rock
@@ -517,6 +518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 4
   maxHealth: 4
+  size: 1
   objectToSpawn: {fileID: 6051665169594993881, guid: 631ff14fff133d5429e341d030e4d082, type: 3}
   healthBar: {fileID: 3755022156518831625}
 --- !u!58 &3755022157558340147
@@ -535,3 +537,17 @@ CircleCollider2D:
   m_Offset: {x: 0.001301558, y: 0}
   serializedVersion: 2
   m_Radius: 0.5268514
+--- !u!114 &6921138393465752288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3755022157558340105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 2
+  score: 2

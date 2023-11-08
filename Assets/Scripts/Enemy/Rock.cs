@@ -6,15 +6,13 @@ public class Rock : MonoBehaviour
 {
     public float health = 4;
     public float maxHealth = 4;
-    public float size = 1.0f;
     public GameObject objectToSpawn;
 
     private bool isCreated = false;
     private bool rush = false;
 
     [SerializeField] FloatingHealthBar healthBar;
-
-
+    public float size; // New variable to store the rock's size
 
     // Start is called before the first frame update
     void Start()
@@ -28,9 +26,6 @@ public class Rock : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-
         if (health <= 0 && isCreated == false)
         {
             Instantiate(objectToSpawn, transform.position, transform.rotation);
@@ -51,30 +46,35 @@ public class Rock : MonoBehaviour
         }
     }
 
-
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         // Assuming the player's GameObject has a SizeScript component
         GameObject player = collision.gameObject;
         SizeScript playerSizeScript = player.GetComponent<SizeScript>();
 
-        if (playerSizeScript != null)
-        {
-            Debug.Log($"Player Size: {playerSizeScript.size}, Rock Size: {size}");
-        }
+        // Set the rock's size based on the new variable
+        size = transform.localScale.x; // Assuming uniform scaling
 
-        if (playerSizeScript != null && playerSizeScript.size >= size && rush)
+        
+
+        if (rush)
         {
             
-            Debug.Log("Destroyed Rock");
-            Destroy(gameObject);
-        }
-        else if (rush)
-        {
-            healthBar.gameObject.SetActive(true);
-            health -= 1;
-            healthBar.UpdateHealthBar(health, maxHealth);
+
+            if (playerSizeScript.scale < size)
+            {
+                healthBar.gameObject.SetActive(true);
+                health -= 1;
+                healthBar.UpdateHealthBar(health, maxHealth);
+
+                if (health <= 0 && !isCreated)
+                {
+                    Debug.Log("Destroying rock");
+                    Destroy(gameObject);
+                    isCreated = true;
+                }
+            }
         }
     }
 }
