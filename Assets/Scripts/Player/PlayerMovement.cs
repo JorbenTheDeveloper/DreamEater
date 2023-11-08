@@ -4,43 +4,72 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement and Control")]
+    // Movement and Control Variables
     public float size = 1.0f;
     private Camera mainCamera;
     private Transform m_transform;
     private bool rush = false;
     private bool isRecharging = false;
     private float rechargeTimer = 0f;
-
-    public int score = 0;
-    public TMP_Text score_text;
-
     public float maxSpeed = 10f;
     public Collision2D body;
 
+    [Header("Score")]
+    // Score Variables
+    public int score = 0;
+    public TMP_Text score_text;
+
+    [Header("Stamina")]
+    // Stamina Variables
     public Image StaminaBar;
     public float Stamina;
     public float maxStamina;
     public float rushCost;
     public float chargeRate;
 
+    [Header("Knockback")]
+    // Knockback Variables
     public float knockbackForce = 5f;
 
+    [Header("Coroutine variable")]
+    // Coroutine Variables
     private Coroutine recharge;
 
+    [Header("External References")]
+    // External References
     public PlayerHealth playerHealth;
     public int projectileDamage;
+
+    [Header("Scale")]
+    // Scale Increase Variables
+    public float scaleIncreaseAmount = 0.1f; // Adjust this value as needed
+    public int pointsToIncreaseScale = 50; // Adjust this value as needed
+    public TMP_Text sizeText;
+    public CinemachineVirtualCamera cinemachineVirtualCamera;
+    private float initialCameraSize = 5f;
+    public SizeScript sizeScript;
 
     void Start()
     {
         mainCamera = Camera.main;
-        m_transform = this.transform;
+        m_transform = transform;
+
+        sizeText.text = "Size: " + sizeScript.size.ToString("F1");
+
+        if (cinemachineVirtualCamera != null)
+        {
+            cinemachineVirtualCamera.m_Lens.OrthographicSize = initialCameraSize;
+        }
     }
 
     void Update()
     {
+        // Stamina Logic
         if (!isRecharging)
         {
             if (Stamina > 0)
@@ -71,9 +100,11 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        // Movement and Control Logic
         FollowMousePositionDelayed(maxSpeed);
         LAMouse();
 
+        // Rush Logic
         if (!isRecharging && Input.GetMouseButton(0) && Stamina > 0)
         {
             maxSpeed = 10f;
@@ -94,7 +125,32 @@ public class PlayerMovement : MonoBehaviour
             rush = false;
         }
 
+        // Score Display
         score_text.SetText(score.ToString());
+
+        if (score >= pointsToIncreaseScale)
+        {
+            int growthCount = score / pointsToIncreaseScale; // Calculate how many times to grow
+            for (int i = 0; i < growthCount; i++)
+            {
+                IncreaseScale();
+            }
+
+            score %= pointsToIncreaseScale; // Update the score without deducting for the growth
+        }
+
+        // Update the size label
+        sizeText.text = "Size: " + sizeScript.size.ToString("F1");
+
+        if (cinemachineVirtualCamera != null)
+        {
+            cinemachineVirtualCamera.m_Lens.OrthographicSize = initialCameraSize + size;
+        }
+
+        sizeScript.size = size;
+
+        // Update the score text as a fraction of 50
+        score_text.SetText(string.Format("{0}/{1}", score, pointsToIncreaseScale));
     }
 
     private void FollowMousePositionDelayed(float maxSpeed)
@@ -159,7 +215,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy") && rush)
         {
-            
             score += 5;
             Knockback(collision.transform);
             Destroy(collision.gameObject);
@@ -167,7 +222,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Rock") && rush)
         {
-            
             score += 1;
             Knockback(collision.transform);
         }
@@ -194,6 +248,11 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("hit");
             playerHealth.TakeDamage(projectileDamage);
+        }
+
+        if (collision.gameObject.CompareTag("Score"))
+        {
+            score += 25;
         }
     }
 
@@ -240,6 +299,12 @@ public class PlayerMovement : MonoBehaviour
 
             targetRigidbody.velocity = Vector2.zero;
         }
+    }
+
+    private void IncreaseScale()
+    {
+        size += scaleIncreaseAmount;
+        transform.localScale = new Vector3(size, size, 1.0f);
     }
 }
 

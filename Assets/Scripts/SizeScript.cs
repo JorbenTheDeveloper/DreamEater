@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SizeScript : MonoBehaviour
 {
-    public float size = 1.0f;
+    public float size;
 
+    void Start()
+    {
+        // Set the size based on the object's initial scale
+        size = transform.localScale.x; // Assuming the object has uniform scaling
+    }
 }

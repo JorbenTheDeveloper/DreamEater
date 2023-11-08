@@ -12,6 +12,7 @@ TagManager:
   - Win
   - Barrier
   - Projectile
+  - Score
   layers:
   - Default
   - TransparentFX
