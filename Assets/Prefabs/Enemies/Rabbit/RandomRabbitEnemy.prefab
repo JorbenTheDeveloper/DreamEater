@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4059605824896221957}
   - component: {fileID: 4059605824279934400}
   - component: {fileID: 8266297837250663921}
+  - component: {fileID: -5419629248769251920}
   - component: {fileID: 2762158602391775588}
   m_Layer: 0
   m_Name: RandomRabbitEnemy
@@ -164,6 +165,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHealth: {fileID: 0}
   damage: 1
+--- !u!114 &-5419629248769251920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4059605824896221962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 1
 --- !u!114 &2762158602391775588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionArea: {fileID: 4059605825133947158}
+  directCollisionArea: {fileID: 0}
   player: {fileID: 0}
 --- !u!1 &4059605825133947160
 GameObject:

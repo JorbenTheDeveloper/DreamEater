@@ -6,6 +6,7 @@ public class BigEnemy : MonoBehaviour
 {
     public float health = 4;
     public float maxHealth = 4;
+    public float size = 1.0f;
     public GameObject objectToSpawn;
 
     private bool isCreated = false;
@@ -201,10 +202,30 @@ public class BigEnemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        healthBar.gameObject.SetActive(true);
+        // Check if the collision is with the player
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // Assuming the player's GameObject has a SizeScript component
+            SizeScript playerSizeScript = collision.gameObject.GetComponent<SizeScript>();
+
+            Debug.Log("Player takes damage!");
+            // The player is smaller or equal in size, apply damage to the player
+            // You can adjust the damage amount as needed
+            int damageToPlayer = 1;
+            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damageToPlayer);
+
+            if (playerSizeScript != null)
+            {
+                Debug.Log($"Player Size: {playerSizeScript.size}, Carrot Size: {size}");
+            }
+
+            
+        }
 
         if (rush)
         {
+            // If it's a rush, update health and health bar
+            healthBar.gameObject.SetActive(true);
             health -= 1;
             healthBar.UpdateHealthBar(health, maxHealth);
         }

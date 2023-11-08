@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Carrot : MonoBehaviour
 {
+    public float size = 1.0f;
     public float rotationSpeed = 50f;
     public float shootInterval = 2f;
     public Transform projectileSpawnPoint;
@@ -129,10 +130,24 @@ public class Carrot : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        healthBar.gameObject.SetActive(true);
+        // Assuming the player's GameObject has a SizeScript component
+        GameObject player = collision.gameObject;
+        SizeScript playerSizeScript = player.GetComponent<SizeScript>();
 
-        if (rush)
+        if (playerSizeScript != null)
         {
+            Debug.Log($"Player Size: {playerSizeScript.size}, Carrot Size: {size}");
+        }
+
+        if (playerSizeScript != null && playerSizeScript.size >= size && rush)
+        {
+            // The player is the same size or larger, destroy the CarrotEnemy
+            Debug.Log("Destroyed Carrot");
+            Destroy(gameObject);
+        }
+        else if (rush)
+        {
+            healthBar.gameObject.SetActive(true);
             health -= 1;
             healthBar.UpdateHealthBar(health, maxHealth);
         }

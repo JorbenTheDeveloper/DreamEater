@@ -6,6 +6,7 @@ public class Rock : MonoBehaviour
 {
     public float health = 4;
     public float maxHealth = 4;
+    public float size = 1.0f;
     public GameObject objectToSpawn;
 
     private bool isCreated = false;
@@ -54,14 +55,26 @@ public class Rock : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        healthBar.gameObject.SetActive(true);
+        // Assuming the player's GameObject has a SizeScript component
+        GameObject player = collision.gameObject;
+        SizeScript playerSizeScript = player.GetComponent<SizeScript>();
 
-
-        if (rush == true)
+        if (playerSizeScript != null)
         {
+            Debug.Log($"Player Size: {playerSizeScript.size}, Rock Size: {size}");
+        }
+
+        if (playerSizeScript != null && playerSizeScript.size >= size && rush)
+        {
+            
+            Debug.Log("Destroyed Rock");
+            Destroy(gameObject);
+        }
+        else if (rush)
+        {
+            healthBar.gameObject.SetActive(true);
             health -= 1;
             healthBar.UpdateHealthBar(health, maxHealth);
-            print(health);
         }
     }
 }

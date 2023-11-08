@@ -5,7 +5,7 @@ using UnityEngine;
 public class CarrotGunner : MonoBehaviour
 {
     public float rotationSpeed = 50f;
-    public Transform projectileSpawnPoint;
+    public Transform[] projectileSpawnPoints; // Array of projectile spawn points
     public GameObject projectilePrefab;
     public float projectileSpeed = 5f;
 
@@ -21,6 +21,7 @@ public class CarrotGunner : MonoBehaviour
 
     private float nextShootTime;
     public float projectileShootInterval = 2f; // New variable for projectile shoot interval
+    public float size = 1.0f;
 
     private void Start()
     {
@@ -54,6 +55,11 @@ public class CarrotGunner : MonoBehaviour
         {
             Debug.LogError("Player not found. Make sure the player has the 'Player' tag.");
         }
+
+        if (projectileSpawnPoints.Length == 0)
+        {
+            Debug.LogError("No projectile spawn points assigned. Please assign them in the Inspector.");
+        }
     }
 
     void Update()
@@ -83,17 +89,33 @@ public class CarrotGunner : MonoBehaviour
     {
         if (Time.time > nextShootTime)
         {
-            GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
-            Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
-
-            if (projectileRb != null)
+            foreach (Transform spawnPoint in projectileSpawnPoints)
             {
-                Vector3 playerDirection = (playerTransform.position - projectileSpawnPoint.position).normalized;
-                projectileRb.AddForce(playerDirection * projectileSpeed, ForceMode2D.Impulse);
+                GameObject projectile = Instantiate(projectilePrefab, spawnPoint.position, spawnPoint.rotation);
+                Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
+
+                if (projectileRb != null)
+                {
+                    // Set the velocity using rigidbody physics
+                    projectileRb.velocity = (playerTransform.position - spawnPoint.position).normalized * projectileSpeed;
+
+                    // Add a custom script to the projectile to handle its behavior on collision
+                    projectile.AddComponent<ProjectileScript>();
+                }
             }
 
-            Destroy(projectile, 5f);
             nextShootTime = Time.time + projectileShootInterval; // Use the new interval variable
+        }
+    }
+
+    IEnumerator DestroyProjectileAfterDelay(GameObject projectile)
+    {
+        yield return new WaitForSeconds(3f);
+
+        // Destroy the projectile after 3 seconds
+        if (projectile != null)
+        {
+            Destroy(projectile);
         }
     }
 
@@ -127,6 +149,20 @@ public class CarrotGunner : MonoBehaviour
         {
             health -= 1;
             healthBar.UpdateHealthBar(health, maxHealth);
+        }
+
+        if (collision.collider.CompareTag("Player"))
+        {
+            Rigidbody2D projectileRb = collision.collider.gameObject.GetComponent<Rigidbody2D>();
+
+            if (projectileRb != null)
+            {
+                // Stop the projectile's movement
+                projectileRb.velocity = Vector2.zero;
+
+                // Destroy the projectile when it hits the player
+                Destroy(collision.collider.gameObject);
+            }
         }
     }
 }
