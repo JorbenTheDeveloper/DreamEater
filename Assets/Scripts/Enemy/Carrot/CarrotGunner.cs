@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarrotTracker : MonoBehaviour
+public class CarrotGunner : MonoBehaviour
 {
     public float rotationSpeed = 50f;
     public Transform projectileSpawnPoint;
