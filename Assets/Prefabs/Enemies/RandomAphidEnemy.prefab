@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 3605949704329516671}
   - component: {fileID: 3605949704329516670}
-  - component: {fileID: 3605949704329516657}
   - component: {fileID: 3605949704329516658}
   - component: {fileID: 8713268793441271942}
   - component: {fileID: 3120576948191402576}
   - component: {fileID: 3173169970506343647}
+  - component: {fileID: 4116455621921968635}
   m_Layer: 0
-  m_Name: AphidEnemy
+  m_Name: RandomAphidEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,27 +90,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3605949704329516657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3605949704329516669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79b41e065086158488e10c25337635a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  size: 1
-  movementPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  moveSpeed: 1
-  detectionArea: {fileID: 3605949704426273889}
-  player: {fileID: 0}
 --- !u!50 &3605949704329516658
 Rigidbody2D:
   serializedVersion: 4
@@ -158,8 +137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.5
-  score: 1
+  scale: 0
+  score: 0
 --- !u!60 &3173169970506343647
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -328,6 +307,21 @@ PolygonCollider2D:
       - {x: -0.13625, y: 0.29}
       - {x: -0.13625, y: 0.2725}
       - {x: -0.15375, y: 0.2725}
+--- !u!114 &4116455621921968635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3605949704329516669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ab2877fa0a20b4ab6775a692af444f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionArea: {fileID: 0}
+  directCollisionArea: {fileID: 0}
+  player: {fileID: 7354428975116626086, guid: 1ed655db438a042449ba211c8d81164f, type: 3}
 --- !u!1 &3605949704426273903
 GameObject:
   m_ObjectHideFlags: 0

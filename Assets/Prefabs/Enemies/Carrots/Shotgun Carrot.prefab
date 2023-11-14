@@ -377,7 +377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 2
+  scale: 1.5
+  score: 2
 --- !u!114 &2437092525971321542
 MonoBehaviour:
   m_ObjectHideFlags: 0

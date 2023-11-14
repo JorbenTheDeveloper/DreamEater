@@ -471,7 +471,7 @@ MonoBehaviour:
   size: 1
   rotationSpeed: 60
   shootInterval: 1
-  projectileSpawnPoint: {fileID: 1714479969859692865}
+  projectileSpawnPoints: []
   projectilePrefab: {fileID: 6044718964886403137, guid: 81a81a537691ea54ba9b83b7ae456ffa, type: 3}
   projectileSpeed: 1.5
   health: 4
@@ -518,7 +518,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 2
+  scale: 1.5
+  score: 2
 --- !u!1 &1714479969859692864
 GameObject:
   m_ObjectHideFlags: 0
