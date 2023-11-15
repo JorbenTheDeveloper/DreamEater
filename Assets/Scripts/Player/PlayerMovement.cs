@@ -297,11 +297,11 @@ public class PlayerMovement : MonoBehaviour
 
         float timer = 0f;
 
-        while (timer < knockbackDuration && targetRigidbody != null) // Add null check here
+        while (timer < knockbackDuration && targetRigidbody != null)
         {
             timer += Time.fixedDeltaTime;
 
-            if (targetRigidbody != null) // Double-check for safety
+            if (targetRigidbody != null)
             {
                 targetRigidbody.velocity = knockbackDirection * knockbackForce;
             }
@@ -309,7 +309,7 @@ public class PlayerMovement : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        // Double-check for safety
+        // Check if the Rigidbody2D is still valid before continuing
         if (targetRigidbody != null)
         {
             // Slow down before stopping
@@ -319,9 +319,11 @@ public class PlayerMovement : MonoBehaviour
                 yield return new WaitForFixedUpdate();
             }
 
+            // Set the velocity to zero to ensure it stops completely
             targetRigidbody.velocity = Vector2.zero;
         }
     }
+
 
     private void IncreaseScale()
     {
@@ -342,25 +344,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void ShootProjectile()
     {
-        // Instantiate the projectile
-        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+        // Ensure that the player's size doesn't go below 0.5
+        if (size > 0.5f)
+        {
+            // Instantiate the projectile
+            GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
 
-        // Set the size of the projectile
-        projectile.transform.localScale = new Vector3(size, size, 1.0f);
+            // Set the size of the projectile
+            projectile.transform.localScale = new Vector3(size, size, 1.0f);
 
-        // Get the rigidbody of the projectile
-        Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
+            // Get the rigidbody of the projectile
+            Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
 
-        // Set the velocity of the projectile based on the player's rotation
-        Vector2 projectileDirection = new Vector2(Mathf.Cos(m_transform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(m_transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
-        projectileRb.velocity = projectileDirection * projectileSpeed;
+            // Set the velocity of the projectile based on the player's rotation
+            Vector2 projectileDirection = new Vector2(Mathf.Cos(m_transform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(m_transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
+            projectileRb.velocity = projectileDirection * projectileSpeed;
 
-        // Destroy the projectile after 5 seconds
-        Destroy(projectile, 5f);
+            // Destroy the projectile after 5 seconds
+            Destroy(projectile, 5f);
 
-        // Reduce the player's size
-        size -= projectileSizeReduction;
-        transform.localScale = new Vector3(size, size, 1.0f);
+            // Reduce the player's size, but ensure it doesn't go below 0.5
+            size = Mathf.Max(size - projectileSizeReduction, 0.5f);
+            transform.localScale = new Vector3(size, size, 1.0f);
+        }
     }
 
     // ... (remaining code)
