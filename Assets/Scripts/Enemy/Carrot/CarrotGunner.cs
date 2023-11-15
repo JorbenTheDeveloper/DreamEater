@@ -164,5 +164,12 @@ public class CarrotGunner : MonoBehaviour
                 Destroy(collision.collider.gameObject);
             }
         }
+
+        if (collision.gameObject.CompareTag("acid"))
+        {
+
+            // Destroy the projectile
+            Destroy(gameObject);
+        }
     }
 }

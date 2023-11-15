@@ -518,9 +518,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 4
   maxHealth: 4
-  size: 1
   objectToSpawn: {fileID: 6051665169594993881, guid: 631ff14fff133d5429e341d030e4d082, type: 3}
   healthBar: {fileID: 3755022156518831625}
+  size: 1
 --- !u!58 &3755022157558340147
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -549,5 +549,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 2
+  scale: 2
   score: 2

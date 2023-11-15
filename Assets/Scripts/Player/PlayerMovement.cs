@@ -55,6 +55,12 @@ public class PlayerMovement : MonoBehaviour
     private float initialCameraSize = 5f;
     public SizeScript sizeScript;
 
+    [Header("Projectile")]
+    public GameObject projectilePrefab;
+    public Transform projectileSpawnPoint;
+    public float projectileSpeed = 10f;
+    public float projectileSizeReduction = 0.1f;
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -102,6 +108,11 @@ public class PlayerMovement : MonoBehaviour
                 isRecharging = false;
                 Stamina = maxStamina;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            ShootProjectile();
         }
 
         // Movement and Control Logic
@@ -320,5 +331,29 @@ public class PlayerMovement : MonoBehaviour
     {
         get { return size; }
     }
+
+    private void ShootProjectile()
+    {
+        // Instantiate the projectile
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+
+        // Set the size of the projectile
+        projectile.transform.localScale = new Vector3(size, size, 1.0f);
+
+        // Get the rigidbody of the projectile
+        Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
+
+        // Set the velocity of the projectile based on the player's rotation
+        Vector2 projectileDirection = new Vector2(Mathf.Cos(m_transform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(m_transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
+        projectileRb.velocity = projectileDirection * projectileSpeed;
+
+        // Destroy the projectile after 5 seconds
+        Destroy(projectile, 5f);
+
+        // Reduce the player's size
+        size -= projectileSizeReduction;
+        transform.localScale = new Vector3(size, size, 1.0f);
+    }
+
 }
 

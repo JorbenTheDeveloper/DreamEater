@@ -155,5 +155,12 @@ public class Carrot : MonoBehaviour
             health -= 1;
             healthBar.UpdateHealthBar(health, maxHealth);
         }
+
+        if (collision.gameObject.CompareTag("acid"))
+        {
+
+            // Destroy the projectile
+            Destroy(gameObject);
+        }
     }
 }

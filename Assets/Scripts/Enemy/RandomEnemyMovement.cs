@@ -104,6 +104,13 @@ public class RandomEnemyMovement : MonoBehaviour
                 Debug.LogError("PlayerHealth script not found on the player.");
             }
         }
+
+        if (collision.gameObject.CompareTag("acid"))
+        {
+
+            // Destroy the projectile
+            Destroy(gameObject);
+        }
     }
 
     void MoveToPlayer()

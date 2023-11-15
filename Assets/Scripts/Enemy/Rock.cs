@@ -76,5 +76,12 @@ public class Rock : MonoBehaviour
                 }
             }
         }
+
+        if (collision.gameObject.CompareTag("acid"))
+        {
+
+            // Destroy the projectile
+            Destroy(gameObject);
+        }
     }
 }

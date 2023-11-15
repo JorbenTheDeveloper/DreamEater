@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2971712496624101874}
   - component: {fileID: 2971712496624101875}
   - component: {fileID: 2971712496624101872}
+  - component: {fileID: -6959881447775473339}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -125,9 +126,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79b41e065086158488e10c25337635a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  range: 0.5
-  maxDistance: 2
+  size: 1
+  movementPoints: []
+  moveSpeed: 2
+  detectionArea: {fileID: 0}
+  player: {fileID: 0}
 --- !u!50 &2971712496624101872
 Rigidbody2D:
   serializedVersion: 4
@@ -149,3 +152,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-6959881447775473339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2971712496624101887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93aad95bd89bb68499a1daaaf3458312, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: 1
+  score: 2

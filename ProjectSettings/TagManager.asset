@@ -13,6 +13,8 @@ TagManager:
   - Barrier
   - Projectile
   - Score
+  - Acid
+  - acid
   layers:
   - Default
   - TransparentFX

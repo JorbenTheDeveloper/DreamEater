@@ -13,7 +13,7 @@ public class SizeScript : MonoBehaviour
         // Set the size based on the object's initial scale
         scale = transform.localScale.x; // Assuming the object has uniform scaling
 
-        Debug.Log("Scale in SizeScript: " + scale);
+        
 
         // Find the PlayerMovement script in the scene
         playerMovement = FindObjectOfType<PlayerMovement>();

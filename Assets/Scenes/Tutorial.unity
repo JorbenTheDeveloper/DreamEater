@@ -889,6 +889,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6051665169594993885, guid: 631ff14fff133d5429e341d030e4d082, type: 3}
   m_PrefabInstance: {fileID: 1315425409}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &143990729 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6051665169594993881, guid: 631ff14fff133d5429e341d030e4d082, type: 3}
+  m_PrefabInstance: {fileID: 1741643434}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &160485064 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3898222611415731729, guid: 365310d30a5e1464db1e11dcf7e11bd2, type: 3}
@@ -14649,6 +14654,37 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 631ff14fff133d5429e341d030e4d082, type: 3}
+--- !u!1 &489363796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 489363797}
+  m_Layer: 0
+  m_Name: Projectile Spawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &489363797
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489363796}
+  m_LocalRotation: {x: -0, y: -0, z: -0.016262, w: -0.9998678}
+  m_LocalPosition: {x: 1.1800032, y: -0.0000000108993845, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1034420338}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -358.136}
 --- !u!4 &497497513 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2557602087478322885, guid: 4a00c51034a436b4aacc1b73c310598e, type: 3}
@@ -17432,6 +17468,10 @@ MonoBehaviour:
   sizeText: {fileID: 1581759538}
   cinemachineVirtualCamera: {fileID: 2033429919}
   sizeScript: {fileID: 1034420343}
+  projectilePrefab: {fileID: 8717066908205364182, guid: dc85d743aaf93e24d87f84978b76d344, type: 3}
+  projectileSpawnPoint: {fileID: 489363797}
+  projectileSpeed: 10
+  projectileSizeReduction: 0.1
 --- !u!114 &1034420343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26009,6 +26049,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6051665169594993885, guid: 631ff14fff133d5429e341d030e4d082, type: 3}
   m_PrefabInstance: {fileID: 1741643434}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1741643440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143990729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8923c85fdb68df4787ad7a7ff369c6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1762297864
 PrefabInstance:
   m_ObjectHideFlags: 0
