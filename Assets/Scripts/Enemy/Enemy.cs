@@ -4,67 +4,93 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float size = 1.0f;
-
-    [SerializeField]
-    private Transform[] movementPoints;
-    
-
     private Vector2 currentMovementPoint;
-
-    private int currentMovementPointIndex, previousMovementPointIndex;
-
-    [SerializeField]
     private float moveSpeed = 2f;
+    private float changeDirectionTimer = 0f;
+    private float timeBetweenDirectionChanges = 0.5f;
+
+    private float lungeSpeedMultiplier = 3f; // Adjust the speed multiplier as needed
+    private float lungeCooldown = 10f; // Cooldown for the lunge
+    private float lungeDuration = 2f; // Adjust the duration of the lunge
+    private float lungeCooldownTimer = 0f;
+    private bool isLunging = false;
 
     private Vector3 tempScale;
     private bool chasePlayer;
+    public bool useMovementPoints = true; // Added variable to switch between random and movement points
 
     public Collider2D detectionArea;
+    public Collider2D directCollisionArea; // New collider for direct collisions with the player
     public Transform player;
+    public Transform[] movementPoints;
 
     private void Start()
     {
-        SetMovementPointTarget();
+        if (useMovementPoints)
+            SetMovementPointTarget();
+        else
+            SetRandomMovementTarget();
     }
 
     private void Update()
     {
         if (chasePlayer)
-            MoveToPlayer();
+        {
+            if (!isLunging)
+            {
+                MoveToPlayer();
+
+                // Check if the player is within lunge range
+                float lungeRange = 2.0f; // Adjust the range as needed
+                if (Vector2.Distance(transform.position, player.position) < lungeRange)
+                {
+                    if (Time.time >= lungeCooldownTimer)
+                    {
+                        StartCoroutine(Lunge());
+                    }
+                }
+            }
+        }
         else
-            MoveToTarget();
+        {
+            if (useMovementPoints)
+                MoveToTarget();
+            else
+                MoveRandomly();
+        }
 
         HandleFacingDirection();
     }
 
     void MoveToTarget()
     {
-        transform.position =
-            Vector2.MoveTowards(transform.position, currentMovementPoint, Time.deltaTime * moveSpeed);
+        transform.position = Vector2.MoveTowards(transform.position, currentMovementPoint, Time.deltaTime * moveSpeed);
 
         if (Vector2.Distance(transform.position, currentMovementPoint) < 0.1f)
         {
             SetMovementPointTarget();
         }
+    }
 
-        
+    void MoveRandomly()
+    {
+        if (Time.time >= changeDirectionTimer)
+        {
+            SetRandomMovementTarget();
+            changeDirectionTimer = Time.time + timeBetweenDirectionChanges;
+        }
+
+        transform.position = Vector2.MoveTowards(transform.position, currentMovementPoint, Time.deltaTime * moveSpeed);
     }
 
     void SetMovementPointTarget()
     {
-        while (true)
-        {
+        currentMovementPoint = movementPoints[Random.Range(0, movementPoints.Length)].position;
+    }
 
-            currentMovementPointIndex = Random.Range(0, movementPoints.Length);
-
-            if (currentMovementPointIndex != previousMovementPointIndex)
-            {
-                previousMovementPointIndex = currentMovementPointIndex;
-                currentMovementPoint = movementPoints[currentMovementPointIndex].position;
-                break;
-            }
-        }
+    void SetRandomMovementTarget()
+    {
+        currentMovementPoint = new Vector2(Random.Range(-10f, 10f), Random.Range(-10f, 10f));
     }
 
     void HandleFacingDirection()
@@ -83,41 +109,81 @@ public class Enemy : MonoBehaviour
         transform.localScale = tempScale;
     }
 
-    private void OnTriggerEnter2D(Collider2D detectionArea)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (detectionArea.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             moveSpeed = 2f;
             chasePlayer = true;
-            currentMovementPoint = detectionArea.gameObject.transform.position;
+            currentMovementPoint = other.gameObject.transform.position;
+            player = other.gameObject.transform;
         }
     }
 
-    private void OnTriggerExit2D(Collider2D detectionArea)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (detectionArea.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             chasePlayer = false;
-            SetMovementPointTarget();
+
+            if (useMovementPoints)
+                SetMovementPointTarget();
+            else
+                SetRandomMovementTarget();
+
+            player = null;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(1);
+            }
+            else
+            {
+                Debug.LogError("PlayerHealth script not found on the player.");
+            }
+        }
+
+        if (collision.gameObject.CompareTag("acid"))
+        {
+            Destroy(gameObject);
         }
     }
 
     void MoveToPlayer()
     {
-        
-        transform.position =
-            Vector2.MoveTowards(transform.position, player.position, Time.deltaTime * moveSpeed);
-        
-        
+        if (player != null)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, player.position, Time.deltaTime * moveSpeed);
+        }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    IEnumerator Lunge()
     {
-        if (collision.gameObject.CompareTag("acid"))
-        {
+        isLunging = true;
 
-            // Destroy the projectile
-            Destroy(gameObject);
-        }
+        // Store the original move speed before the lunge
+        float originalMoveSpeed = moveSpeed;
+
+        // Speed up for the lunge
+        moveSpeed *= lungeSpeedMultiplier;
+
+        // Wait for the lunge duration
+        yield return new WaitForSeconds(lungeDuration);
+
+        // Slow back down to the original speed
+        moveSpeed = originalMoveSpeed;
+
+        // Reset lunge cooldown timer
+        lungeCooldownTimer = Time.time + lungeCooldown;
+
+        isLunging = false;
     }
 }

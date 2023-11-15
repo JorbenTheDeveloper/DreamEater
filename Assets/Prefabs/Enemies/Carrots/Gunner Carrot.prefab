@@ -328,7 +328,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 70
-  projectileSpawnPoints: []
+  projectileSpawnPoints:
+  - {fileID: 2557602086881604446}
   projectilePrefab: {fileID: 6044718964886403137, guid: 81a81a537691ea54ba9b83b7ae456ffa, type: 3}
   projectileSpeed: 6
   health: 4

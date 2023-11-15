@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         rechargeTimerText.text = rechargeTimer.ToString("F1");
 
@@ -83,13 +83,12 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Stamina > 0)
             {
-                Stamina += chargeRate * Time.deltaTime;
+                Stamina += chargeRate * Time.fixedDeltaTime;
 
                 if (Stamina > maxStamina)
                 {
                     Stamina = maxStamina;
                     StaminaBar.fillAmount = Stamina / maxStamina;
-
                 }
                 StaminaBar.fillAmount = Stamina / maxStamina;
             }
@@ -101,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            rechargeTimer -= Time.deltaTime;
+            rechargeTimer -= Time.fixedDeltaTime;
 
             if (rechargeTimer <= 0f)
             {
@@ -109,6 +108,15 @@ public class PlayerMovement : MonoBehaviour
                 Stamina = maxStamina;
             }
         }
+
+        // ... (remaining code)
+    }
+
+    void Update()
+    {
+        rechargeTimerText.text = rechargeTimer.ToString("F1");
+
+        // ... (previous code)
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -355,5 +363,8 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = new Vector3(size, size, 1.0f);
     }
 
+    // ... (remaining code)
 }
+
+
 
