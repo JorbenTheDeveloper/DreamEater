@@ -15,6 +15,7 @@ TagManager:
   - Score
   - Acid
   - acid
+  - Tree
   layers:
   - Default
   - TransparentFX

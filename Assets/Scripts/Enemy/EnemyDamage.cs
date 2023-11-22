@@ -23,7 +23,7 @@ public class EnemyDamage : MonoBehaviour
     {
         if (collision.collider.gameObject.CompareTag("Mouth"))
         {
-            print("Eaten");
+            
         }
 
         if (collision.collider.gameObject.CompareTag("Player"))

@@ -61,6 +61,8 @@ public class PlayerMovement : MonoBehaviour
     public float projectileSpeed = 10f;
     public float projectileSizeReduction = 0.1f;
 
+    private static PlayerMovement instance;
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -176,6 +178,23 @@ public class PlayerMovement : MonoBehaviour
         score_text.SetText(string.Format("{0}/{1}", score, pointsToIncreaseScale));
     }
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public static PlayerMovement Instance
+    {
+        get { return instance; }
+    }
+
     private void FollowMousePositionDelayed(float maxSpeed)
     {
         if (!IsMouseOverPlayer())
@@ -230,7 +249,7 @@ public class PlayerMovement : MonoBehaviour
                 return; // Don't execute the other checks if the object is eaten
             }
 
-            Debug.Log("*Nom nom*");
+            
             sizeScript.DestroyObject(); // Update player's score and destroy the object
             return; // Don't execute the other checks if the object is eaten
         }
@@ -243,6 +262,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (collision.gameObject.CompareTag("Rock") && rush)
+        {
+            score += 1;
+            Knockback(collision.transform);
+        }
+
+        if (collision.gameObject.CompareTag("Tree") && rush)
         {
             score += 1;
             Knockback(collision.transform);

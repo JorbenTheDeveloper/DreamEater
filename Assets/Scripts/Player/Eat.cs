@@ -27,7 +27,7 @@ public class Eat : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") & rush == true)
         {
-            print("*Gulp*");
+            
             player.score += 5;
 
             Destroy(collision.gameObject);

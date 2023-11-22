@@ -70,7 +70,7 @@ public class Rock : MonoBehaviour
 
                 if (health <= 0 && !isCreated)
                 {
-                    Debug.Log("Destroying rock");
+                    
                     Destroy(gameObject);
                     isCreated = true;
                 }
