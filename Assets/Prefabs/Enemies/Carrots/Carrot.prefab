@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14473775a7862e040b6f04a34c95d3e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 1
+  size: 2
   rotationSpeed: 60
   shootInterval: 1
   projectileSpawnPoints: []

@@ -337,7 +337,7 @@ MonoBehaviour:
   healthBar: {fileID: 2557602087773699935}
   detectionAreaTransform: {fileID: 2557602088310049406}
   projectileShootInterval: 0.5
-  size: 1
+  size: 2
 --- !u!1 &2557602087773699928
 GameObject:
   m_ObjectHideFlags: 0
