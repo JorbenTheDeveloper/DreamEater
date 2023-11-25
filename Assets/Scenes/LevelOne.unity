@@ -2315,6 +2315,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0.032186
       objectReference: {fileID: 0}
+    - target: {fileID: 3798051807413033490, guid: 4a00c51034a436b4aacc1b73c310598e, type: 3}
+      propertyPath: projectileShootInterval
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a00c51034a436b4aacc1b73c310598e, type: 3}
 --- !u!1001 &498448658
@@ -47107,6 +47111,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 59820238}
     m_Modifications:
+    - target: {fileID: 2437092525971321542, guid: 365310d30a5e1464db1e11dcf7e11bd2, type: 3}
+      propertyPath: projectileShootInterval
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3898222610690563973, guid: 365310d30a5e1464db1e11dcf7e11bd2, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
