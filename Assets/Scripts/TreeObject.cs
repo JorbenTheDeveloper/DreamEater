@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TreeObject : MonoBehaviour
 {
-    public float health = 8; // Set initial health to 8
+    public float health = 8;
     public float maxHealth = 8;
     public GameObject objectToSpawn;
 
@@ -12,23 +10,21 @@ public class TreeObject : MonoBehaviour
     private bool rush = false;
 
     [SerializeField] FloatingHealthBar healthBar;
-    public float size; // New variable to store the tree's size
+    public float size;
 
     void Start()
     {
         healthBar = GetComponentInChildren<FloatingHealthBar>();
         healthBar.UpdateHealthBar(health, maxHealth);
-
         healthBar.gameObject.SetActive(false);
 
-        // Set the tree's size based on the object's initial scale
-        size = transform.localScale.x; // Assuming uniform scaling
-
-        // Additional setup code if needed
+        UpdateSize(); // Set the tree's size based on the object's initial scale
     }
 
     void Update()
     {
+        UpdateSize(); // Update the tree's size if it changes dynamically
+
         if (health <= 0 && !isCreated)
         {
             SpawnObjects();
@@ -38,26 +34,35 @@ public class TreeObject : MonoBehaviour
 
         // Update rush based on input
         rush = Input.GetMouseButton(0);
+
+        // Deactivate health bar when rushing is false
+        if (!rush)
+        {
+            healthBar.gameObject.SetActive(false);
+        }
+    }
+
+    void UpdateSize()
+    {
+        // Set the tree's size based on the object's scale
+        size = transform.localScale.x; // Assuming uniform scaling
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Assuming the player's GameObject has a SizeScript component
         GameObject player = collision.gameObject;
         SizeScript playerSizeScript = player.GetComponent<SizeScript>();
 
-        // Set the tree's size based on the new variable
-        size = transform.localScale.x; // Assuming uniform scaling
-
         if (rush && playerSizeScript != null)
         {
-            Debug.Log("Player Size: " + playerSizeScript.scale);
+            // Debug.Log("Player Size: " + playerSizeScript.scale); // Uncomment for debugging
 
             if (playerSizeScript.scale < size)
             {
-                Debug.Log("Activating Health Bar");
+                // Debug.Log("Activating Health Bar"); // Uncomment for debugging
                 healthBar.gameObject.SetActive(true);
-                Debug.Log("Reducing Health");
+
+                // Debug.Log("Reducing Health"); // Uncomment for debugging
                 health -= 1;
                 healthBar.UpdateHealthBar(health, maxHealth);
 
@@ -65,7 +70,7 @@ public class TreeObject : MonoBehaviour
                 {
                     SpawnObjects();
                     isCreated = true;
-                    Destroy(gameObject);
+                    Destroy(gameObject); // Move the destroy statement here
                 }
             }
         }
@@ -76,12 +81,14 @@ public class TreeObject : MonoBehaviour
         }
     }
 
-    // Method to spawn objects when health reaches 0
     void SpawnObjects()
     {
-        Instantiate(objectToSpawn, transform.position, transform.rotation);
-        Instantiate(objectToSpawn, transform.position, transform.rotation);
-        Instantiate(objectToSpawn, transform.position, transform.rotation);
-        Instantiate(objectToSpawn, transform.position, transform.rotation);
+        if (objectToSpawn != null)
+        {
+            Instantiate(objectToSpawn, transform.position, transform.rotation);
+            Instantiate(objectToSpawn, transform.position, transform.rotation);
+            Instantiate(objectToSpawn, transform.position, transform.rotation);
+            Instantiate(objectToSpawn, transform.position, transform.rotation);
+        }
     }
 }

@@ -239,19 +239,19 @@ public class PlayerMovement : MonoBehaviour
 
         if (rush && sizeScript != null && sizeScript.scale <= size)
         {
+            Debug.Log("Rush condition met and collided with a tree");
+
             // Check if the collision object has a health bar
             FloatingHealthBar enemyHealthBar = collision.gameObject.GetComponent<FloatingHealthBar>();
 
             if (enemyHealthBar != null)
             {
-                // Destroy the enemy immediately
-                Destroy(collision.gameObject);
-                sizeScript.DestroyObject(); // Update player's score and destroy the object
+                
                 return; // Don't execute the other checks if the object is eaten
             }
 
             
-            sizeScript.DestroyObject(); // Update player's score and destroy the object
+            
             return; // Don't execute the other checks if the object is eaten
         }
 
@@ -271,7 +271,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Tree") && rush)
         {
             score += 1;
-            Knockback(collision.transform);
+            Debug.Log("hit tree");
         }
 
         if (collision.gameObject.CompareTag("Win"))

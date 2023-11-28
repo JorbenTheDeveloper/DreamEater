@@ -471,7 +471,8 @@ MonoBehaviour:
   size: 2
   rotationSpeed: 60
   shootInterval: 1
-  projectileSpawnPoints: []
+  projectileSpawnPoints:
+  - {fileID: 1714479969859692865}
   projectilePrefab: {fileID: 6044718964886403137, guid: 81a81a537691ea54ba9b83b7ae456ffa, type: 3}
   projectileSpeed: 1.5
   health: 4
