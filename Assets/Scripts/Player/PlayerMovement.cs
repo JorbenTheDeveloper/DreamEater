@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 
+//PlayerMovement: This script handles the player's movement and control, as well as the player's score and stamina.
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement and Control")]
