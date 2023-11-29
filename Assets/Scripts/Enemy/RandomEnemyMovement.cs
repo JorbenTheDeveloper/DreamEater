@@ -91,7 +91,7 @@ public class RandomEnemyMovement : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             // Get the PlayerHealth script from the Player GameObject
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = collision.transform.parent.GetComponent<PlayerHealth>();
 
             if (playerHealth != null)
             {

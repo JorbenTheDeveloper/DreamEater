@@ -31,8 +31,17 @@ public class BigEnemy : MonoBehaviour
     public Collider2D detectionArea;
     public Transform player;
 
+    private Rigidbody2D rb;
+    private Collider2D col;
+    private SpriteRenderer sr;
+
+    public int damage = 5;
     private void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
+        sr = GetComponent<SpriteRenderer>();
+
         // Set the player variable by finding the GameObject with the "Player" tag
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -75,29 +84,22 @@ public class BigEnemy : MonoBehaviour
         HandleFacingDirection();
     }
 
-    void MoveToTarget()
-    {
-        transform.position =
-            Vector2.MoveTowards(transform.position, currentMovementPoint, Time.deltaTime * moveSpeed);
-
-        if (Vector2.Distance(transform.position, currentMovementPoint) < 0.1f)
-        {
-            SetMovementPointTarget();
-        }
-    }
-
     void SetMovementPointTarget()
     {
-        while (true)
-        {
-            currentMovementPointIndex = Random.Range(0, movementPoints.Length);
+        int index1 = Random.Range(0, movementPoints.Length);
+        int index2 = Random.Range(0, movementPoints.Length);
+        currentMovementPointIndex = (index1 != previousMovementPointIndex) ? index1 : index2;
+        previousMovementPointIndex = currentMovementPointIndex;
+        currentMovementPoint = movementPoints[currentMovementPointIndex].position;
+    }
 
-            if (currentMovementPointIndex != previousMovementPointIndex)
-            {
-                previousMovementPointIndex = currentMovementPointIndex;
-                currentMovementPoint = movementPoints[currentMovementPointIndex].position;
-                break;
-            }
+    void MoveToTarget()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, currentMovementPoint, Time.deltaTime * moveSpeed);
+
+        if ((Vector2.Distance(transform.position, currentMovementPoint)) < 0.01f)
+        {
+            SetMovementPointTarget();
         }
     }
 
@@ -144,49 +146,28 @@ public class BigEnemy : MonoBehaviour
 
     void SpawnObjects()
     {
-        // Disable the renderer to hide the BigEnemy
-        GetComponent<SpriteRenderer>().enabled = false;
-
-        // Disable the health bar
+        sr.enabled = false;
         healthBar.gameObject.SetActive(false);
-
-        // Disable the Rigidbody and Collider
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        Collider2D col = GetComponent<Collider2D>();
-        rb.isKinematic = true;  // Set isKinematic to true to disable physics simulation
+        rb.isKinematic = true;
         col.enabled = false;
 
         for (int i = 0; i < 4; i++)
         {
             GameObject spawnedObject = Instantiate(objectToSpawn, transform.position, transform.rotation);
-
-            // Change the tag to "NotEnemy"
             spawnedObject.tag = "NotEnemy";
         }
 
-        // Schedule a method to switch the tag back, enable the renderer, and the health bar
         Invoke("SwitchTagBackAndEnableRenderer", 0.5f);
-
-        // Move the Destroy call here or after the loop to avoid issues
         isCreated = true;
-        Destroy(gameObject, 0.5f); // Destroy after 2 seconds
+        Destroy(gameObject, 0.5f);
     }
 
     void SwitchTagBackAndEnableRenderer()
     {
-        // Enable the renderer to show the BigEnemy
-        GetComponent<SpriteRenderer>().enabled = true;
-
-        // Enable the health bar
+        sr.enabled = true;
         healthBar.gameObject.SetActive(true);
-
-        // Enable the Rigidbody and Collider
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        Collider2D col = GetComponent<Collider2D>();
-        rb.isKinematic = false;  // Set isKinematic back to false to enable physics simulation
+        rb.isKinematic = false;
         col.enabled = true;
-
-        // Switch the tag back
         SwitchTagBack();
     }
 
@@ -202,24 +183,20 @@ public class BigEnemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if the collision is with the player
-        if (collision.gameObject.CompareTag("Player"))
+        Debug.Log("Collision detected with: " + collision.gameObject.tag);
+
+        if (collision.gameObject.transform.CompareTag("Player"))
         {
-            // Assuming the player's GameObject has a SizeScript component
-            SizeScript playerSizeScript = collision.gameObject.GetComponent<SizeScript>();
+            PlayerHealth playerHealth = collision.transform.parent.GetComponent<PlayerHealth>();
 
-            Debug.Log("Player takes damage!");
-            // The player is smaller or equal in size, apply damage to the player
-            // You can adjust the damage amount as needed
-            int damageToPlayer = 1;
-            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damageToPlayer);
-
-            if (playerSizeScript != null)
+            if (playerHealth != null)
             {
-                Debug.Log($"Player Size: {playerSizeScript.scale}, Carrot Size: {size}");
+                playerHealth.TakeDamage(1);
             }
-
-            
+            else
+            {
+                Debug.LogError("PlayerHealth script not found on the player.");
+            }
         }
 
         if (rush)

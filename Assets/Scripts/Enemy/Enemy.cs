@@ -139,7 +139,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = collision.transform.parent.GetComponent<PlayerHealth>();
 
             if (playerHealth != null)
             {

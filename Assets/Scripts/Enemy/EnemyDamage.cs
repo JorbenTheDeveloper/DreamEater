@@ -29,7 +29,7 @@ public class EnemyDamage : MonoBehaviour
         if (collision.collider.gameObject.CompareTag("Player"))
         {
 
-            playerHealth.TakeDamage(damage);
+            collision.transform.parent.GetComponent<PlayerHealth>().TakeDamage(damage);
             
         }
 
