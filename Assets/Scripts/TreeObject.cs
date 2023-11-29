@@ -2,81 +2,74 @@ using UnityEngine;
 
 public class TreeObject : MonoBehaviour
 {
-    public float health = 8;
-    public float maxHealth = 8;
+    public float health = 4;
+    public float maxHealth = 4;
     public GameObject objectToSpawn;
 
     private bool isCreated = false;
     private bool rush = false;
 
     [SerializeField] FloatingHealthBar healthBar;
-    public float size;
+    public float size; // New variable to store the rock's size
 
+    // Start is called before the first frame update
     void Start()
     {
         healthBar = GetComponentInChildren<FloatingHealthBar>();
         healthBar.UpdateHealthBar(health, maxHealth);
         healthBar.gameObject.SetActive(false);
-
-        UpdateSize(); // Set the tree's size based on the object's initial scale
     }
 
+    // Update is called once per frame
     void Update()
     {
-        UpdateSize(); // Update the tree's size if it changes dynamically
-
-        if (health <= 0 && !isCreated)
+        if (health <= 0 && isCreated == false)
         {
             SpawnObjects();
-            isCreated = true;
             Destroy(gameObject);
+            isCreated = true;
         }
 
-        // Update rush based on input
         rush = Input.GetMouseButton(0);
 
-        // Deactivate health bar when rushing is false
-        if (!rush)
+        if (rush)
+        {
+            healthBar.gameObject.SetActive(true);
+        }
+        else
         {
             healthBar.gameObject.SetActive(false);
         }
     }
 
-    void UpdateSize()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Set the tree's size based on the object's scale
-        size = transform.localScale.x; // Assuming uniform scaling
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
+        // Assuming the player's GameObject has a SizeScript component
         GameObject player = collision.gameObject;
         SizeScript playerSizeScript = player.GetComponent<SizeScript>();
 
+        // Set the rock's size based on the new variable
+        size = transform.localScale.x; // Assuming uniform scaling
+
         if (rush && playerSizeScript != null)
         {
-            // Debug.Log("Player Size: " + playerSizeScript.scale); // Uncomment for debugging
-
             if (playerSizeScript.scale < size)
             {
-                // Debug.Log("Activating Health Bar"); // Uncomment for debugging
-                healthBar.gameObject.SetActive(true);
-
-                // Debug.Log("Reducing Health"); // Uncomment for debugging
                 health -= 1;
                 healthBar.UpdateHealthBar(health, maxHealth);
 
                 if (health <= 0 && !isCreated)
                 {
                     SpawnObjects();
+                    Destroy(gameObject);
                     isCreated = true;
-                    Destroy(gameObject); // Move the destroy statement here
                 }
             }
         }
 
         if (collision.gameObject.CompareTag("acid"))
         {
+            // Destroy the projectile
             Destroy(gameObject);
         }
     }
