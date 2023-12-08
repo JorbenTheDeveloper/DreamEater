@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Testing.unity
     guid: 7423bd8a6737a22479805631dc214b22
   - enabled: 1
-    path: Assets/Scenes/Tutorial.unity
+    path: Assets/Scenes/TutorialTEST.unity
     guid: 2a18c234e9ceb7e47a78cc99fc8a3900
   - enabled: 1
     path: Assets/Scenes/Win.unity
