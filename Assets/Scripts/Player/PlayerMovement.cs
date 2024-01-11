@@ -1,6 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -12,11 +16,19 @@ public class PlayerMovement : MonoBehaviour
     public float maxStamina = 100;
     public float staminaDropFactor = 10f;
 
+    public CinemachineVirtualCamera cinemachineVirtualCamera;
+    private float initialCameraSize = 5f;
+
     private void Start()
     {
         mainCamera = Camera.main;
         currentStamina = maxStamina;
         currentSpeed = speed;
+
+        if (cinemachineVirtualCamera != null)
+        {
+            cinemachineVirtualCamera.m_Lens.OrthographicSize = initialCameraSize;
+        }
     }
 
     private void Update()
@@ -46,6 +58,9 @@ public class PlayerMovement : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, GetWorldPositionFromMouse(),
                 currentSpeed * Time.deltaTime);
         RotateToMouse();
+
+        
+
     }
 
     private void RotateToMouse()
