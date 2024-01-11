@@ -15296,6 +15296,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Big_Rock (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3755022157558340105, guid: ee2e6f2601ae43241a37f23717c62164, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3755022157558340109, guid: ee2e6f2601ae43241a37f23717c62164, type: 3}
       propertyPath: m_RootOrder
       value: 26
@@ -17509,6 +17513,14 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 2093748898}
+    - target: {fileID: 5788979643879472724, guid: 1ed655db438a042449ba211c8d81164f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5788979645169490248, guid: 1ed655db438a042449ba211c8d81164f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7354428975116626080, guid: 1ed655db438a042449ba211c8d81164f, type: 3}
       propertyPath: m_Name
       value: Player

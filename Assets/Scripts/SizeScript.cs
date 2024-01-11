@@ -5,7 +5,7 @@ using UnityEngine;
 public class SizeScript : MonoBehaviour
 {
     public float scale;  // Use this variable for the size comparison
-    private PlayerMovement playerMovement;
+    private PlayerController playerMovement;
     public int score;
 
     void Start()
@@ -16,7 +16,7 @@ public class SizeScript : MonoBehaviour
         
 
         // Find the PlayerMovement script in the scene
-        playerMovement = FindObjectOfType<PlayerMovement>();
+        playerMovement = FindObjectOfType<PlayerController>();
         if (playerMovement == null)
         {
             Debug.LogError("PlayerMovement script not found in the scene.");
