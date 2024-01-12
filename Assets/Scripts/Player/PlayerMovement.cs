@@ -17,7 +17,10 @@ public class PlayerMovement : MonoBehaviour
     public float staminaDropFactor = 10f;
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
-    private float initialCameraSize = 5f;
+
+    public Sprite newSprite;
+    public Sprite oldSprite;
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
@@ -25,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
         currentStamina = maxStamina;
         currentSpeed = speed;
 
-        
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -34,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
+            ChangeSprite();
+
             if (currentStamina > 0)
             {
                 currentSpeed = speed * 2;
@@ -48,6 +53,8 @@ public class PlayerMovement : MonoBehaviour
         {
             currentStamina += Time.deltaTime * staminaDropFactor;
             currentSpeed = speed;
+
+            spriteRenderer.sprite = oldSprite;
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -88,5 +95,13 @@ public class PlayerMovement : MonoBehaviour
         mousePosition.z = 0;
         //mousePosition.z = Mathf.Abs(mainCamera.transform.position.z - transform.position.z);
         return mainCamera.ScreenToWorldPoint(mousePosition);
+    }
+
+    void ChangeSprite()
+    {
+        if (spriteRenderer.sprite != newSprite)
+        {
+            spriteRenderer.sprite = newSprite;
+        }
     }
 }
