@@ -25,10 +25,7 @@ public class PlayerMovement : MonoBehaviour
         currentStamina = maxStamina;
         currentSpeed = speed;
 
-        if (cinemachineVirtualCamera != null)
-        {
-            cinemachineVirtualCamera.m_Lens.OrthographicSize = initialCameraSize;
-        }
+        
     }
 
     private void Update()
