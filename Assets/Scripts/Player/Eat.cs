@@ -5,7 +5,7 @@ using UnityEngine;
 public class Eat : MonoBehaviour
 {
     private bool rush = false;
-    public PlayerController player;
+    public PlayerControllerOld player;
 
     // Start is called before the first frame update
     void Start()
