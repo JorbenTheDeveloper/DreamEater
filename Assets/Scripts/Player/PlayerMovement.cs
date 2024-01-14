@@ -18,9 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
 
-    public Sprite newSprite;
-    public Sprite oldSprite;
-    private SpriteRenderer spriteRenderer;
+    private Animator Animator;
 
     private void Start()
     {
@@ -28,33 +26,40 @@ public class PlayerMovement : MonoBehaviour
         currentStamina = maxStamina;
         currentSpeed = speed;
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        Animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        if (IsMouseOverPlayer()) return;
+        if (IsMouseOverPlayer())
+        {
+            Animator.SetBool("IsRunning", false);
+            Animator.SetBool("IsWalking", false);
+            return;
+        }
+
+        Animator.SetBool("IsWalking", true);
 
         if (Input.GetMouseButton(0))
         {
-            ChangeSprite();
-
             if (currentStamina > 0)
             {
                 currentSpeed = speed * 2;
                 currentStamina -= Time.deltaTime * staminaDropFactor;
+                Animator.SetBool("IsRunning", true);
+                Animator.SetBool("IsWalking", false);
             }
             else
             {
                 currentSpeed = speed;
+                Animator.SetBool("IsRunning", false);
             }
         } 
         else
         {
             currentStamina += Time.deltaTime * staminaDropFactor;
             currentSpeed = speed;
-
-            spriteRenderer.sprite = oldSprite;
+            Animator.SetBool("IsRunning", false);
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -95,13 +100,5 @@ public class PlayerMovement : MonoBehaviour
         mousePosition.z = 0;
         //mousePosition.z = Mathf.Abs(mainCamera.transform.position.z - transform.position.z);
         return mainCamera.ScreenToWorldPoint(mousePosition);
-    }
-
-    void ChangeSprite()
-    {
-        if (spriteRenderer.sprite != newSprite)
-        {
-            spriteRenderer.sprite = newSprite;
-        }
     }
 }
