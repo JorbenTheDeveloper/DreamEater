@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 10f;
     private Camera mainCamera;
 
+    private bool isRushing = false;
     private float currentStamina;
     public float maxStamina = 100;
     public float staminaDropFactor = 10f;
@@ -19,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     public CinemachineVirtualCamera cinemachineVirtualCamera;
 
     private Animator Animator;
+
+    public bool IsRushing => isRushing;
 
     private void Start()
     {
@@ -48,11 +51,13 @@ public class PlayerMovement : MonoBehaviour
                 currentStamina -= Time.deltaTime * staminaDropFactor;
                 Animator.SetBool("IsRunning", true);
                 Animator.SetBool("IsWalking", false);
+                isRushing = true;
             }
             else
             {
                 currentSpeed = speed;
                 Animator.SetBool("IsRunning", false);
+                isRushing = false;
             }
         } 
         else
@@ -60,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
             currentStamina += Time.deltaTime * staminaDropFactor;
             currentSpeed = speed;
             Animator.SetBool("IsRunning", false);
+            isRushing = false;
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -67,9 +73,6 @@ public class PlayerMovement : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, GetWorldPositionFromMouse(),
                 currentSpeed * Time.deltaTime);
         RotateToMouse();
-
-        
-
     }
 
     private void RotateToMouse()

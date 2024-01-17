@@ -13,4 +13,13 @@ public class PlayerMouth : MonoBehaviour
             Player.TryEat(eatable);
         }
     }
+
+    // TODO: if game slows down, improve this function
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Eatable eatable))
+        {
+            Player.TryEat(eatable);
+        }
+    }
 }
