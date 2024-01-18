@@ -241,7 +241,7 @@ public class PlayerControllerOld : MonoBehaviour
             
 
             // Check if the collision object has a health bar
-            FloatingHealthBar enemyHealthBar = collision.gameObject.GetComponent<FloatingHealthBar>();
+            FloatingHealthBarOld enemyHealthBar = collision.gameObject.GetComponent<FloatingHealthBarOld>();
 
             if (enemyHealthBar != null)
             {

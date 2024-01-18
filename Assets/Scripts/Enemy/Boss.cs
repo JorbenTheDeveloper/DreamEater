@@ -13,7 +13,7 @@ public class Boss : MonoBehaviour
     private bool rush = false;
 
     // Directly assign the healthBar in the Inspector
-    public FloatingHealthBar healthBar;
+    public FloatingHealthBarOld healthBar;
 
     [SerializeField]
     private Transform[] movementPoints;

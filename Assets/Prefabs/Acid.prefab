@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7346469096238519251}
   - component: {fileID: -7105270438503036025}
   - component: {fileID: 6413790745682454153}
+  - component: {fileID: 6775020741924047937}
   m_Layer: 0
   m_Name: Acid
   m_TagString: acid
@@ -117,9 +118,21 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &6775020741924047937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8717066908205364182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80bb2c285c6f5df418d9afa51ac935ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -16,7 +16,7 @@ public class Carrot : MonoBehaviour
     private bool rush = false;
 
     // Directly assign the healthBar in the Inspector
-    public FloatingHealthBar healthBar;
+    public FloatingHealthBarOld healthBar;
 
     // New variable for the detection area transform
     public Transform detectionAreaTransform;

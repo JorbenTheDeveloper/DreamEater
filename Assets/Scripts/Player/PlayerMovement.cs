@@ -8,14 +8,24 @@ using Cinemachine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private float currentSpeed;
-    public float speed = 10f;
     private Camera mainCamera;
 
+    [Header("Speed")]
+    public float currentSpeed;
+    public float speed = 10f;
+
+    [Header("Rushing")]
+    public float currentStamina;
     private bool isRushing = false;
-    private float currentStamina;
     public float maxStamina = 100;
-    public float staminaDropFactor = 10f;
+    public float staminaDropFactor = 10f; // per second
+    public float staminaRecharce = 20f; // per second
+
+    [Header("Exhaust")]
+    public float exhaustedSpeed = 3f;
+    private bool hasExhausted = false;
+    public float exhaustedDuration = 3f;
+    private float exhaustedTimer = 0;
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
 
@@ -34,20 +44,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        UpdateRushing();
+
         if (IsMouseOverPlayer())
         {
             Animator.SetBool("IsRunning", false);
             Animator.SetBool("IsWalking", false);
             return;
         }
-
         Animator.SetBool("IsWalking", true);
+        MoveAndRotate();
+    }
 
+    private void UpdateRushing()
+    {
         if (Input.GetMouseButton(0))
         {
             if (currentStamina > 0)
             {
                 currentSpeed = speed * 2;
+
                 currentStamina -= Time.deltaTime * staminaDropFactor;
                 Animator.SetBool("IsRunning", true);
                 Animator.SetBool("IsWalking", false);
@@ -55,21 +71,38 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                currentSpeed = speed;
+                hasExhausted = true;
+                currentSpeed = exhaustedSpeed;
                 Animator.SetBool("IsRunning", false);
                 isRushing = false;
             }
-        } 
-        else
+        }
+        else if (!hasExhausted)
         {
-            currentStamina += Time.deltaTime * staminaDropFactor;
+            currentStamina += Time.deltaTime * staminaRecharce;
             currentSpeed = speed;
             Animator.SetBool("IsRunning", false);
             isRushing = false;
         }
 
+        if (hasExhausted)
+        {
+            exhaustedTimer += Time.deltaTime;
+
+            if (exhaustedTimer > exhaustedDuration)
+            {
+                hasExhausted = false;
+                exhaustedTimer = 0;
+                currentStamina = maxStamina;
+            }
+        }
+
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
 
+    }
+
+    private void MoveAndRotate()
+    {
         transform.position = Vector2.MoveTowards(transform.position, GetWorldPositionFromMouse(),
                 currentSpeed * Time.deltaTime);
         RotateToMouse();

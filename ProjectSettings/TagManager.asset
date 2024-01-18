@@ -16,6 +16,7 @@ TagManager:
   - Acid
   - acid
   - Tree
+  - Wall
   layers:
   - Default
   - TransparentFX

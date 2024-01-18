@@ -13,7 +13,7 @@ public class CarrotGunner : MonoBehaviour
     public float maxHealth = 4;
     private bool rush = false;
 
-    public FloatingHealthBar healthBar;
+    public FloatingHealthBarOld healthBar;
     public Transform detectionAreaTransform;
 
     private Collider2D detectionAreaCollider;

@@ -9,13 +9,13 @@ public class TreeObject : MonoBehaviour
     private bool isCreated = false;
     private bool rush = false;
 
-    [SerializeField] FloatingHealthBar healthBar;
+    [SerializeField] FloatingHealthBarOld healthBar;
     public float size; // New variable to store the rock's size
 
     // Start is called before the first frame update
     void Start()
     {
-        healthBar = GetComponentInChildren<FloatingHealthBar>();
+        healthBar = GetComponentInChildren<FloatingHealthBarOld>();
         healthBar.UpdateHealthBar(health, maxHealth);
         healthBar.gameObject.SetActive(false);
     }

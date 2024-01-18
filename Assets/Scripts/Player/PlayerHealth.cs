@@ -9,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
     public int health;
     public int maxHealth = 10;
 
-    [SerializeField] FloatingHealthBar healthBar;
+    [SerializeField] FloatingHealthBarOld healthBar;
 
     // Start is called before the first frame update
     void Start()
