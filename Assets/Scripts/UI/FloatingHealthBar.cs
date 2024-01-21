@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class FloatingHealthBar : MonoBehaviour
 {
-    [SerializeField] private Player player;
+    private Player player => Player.Instance;
     private Slider slider;
 
     // Start is called before the first frame update

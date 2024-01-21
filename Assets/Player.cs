@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
     private float currentHP;
     public float MaxHP;
 
@@ -16,6 +18,14 @@ public class Player : MonoBehaviour
     private PlayerShoot playerShoot;
 
     public float CurrentHP => currentHP;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+            Instance = this;
+    }
 
     public void Start()
     {

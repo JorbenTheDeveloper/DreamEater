@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ScaleUI : MonoBehaviour
 {
-    public Player player;
+    public Player player => Player.Instance;
     public TextMeshProUGUI scaleText;
     
 
