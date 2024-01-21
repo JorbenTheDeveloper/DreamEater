@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Eatable : MonoBehaviour
 {
-    public int Size;
+    public float Size;
     public float growRate = 0.1f;
 }
