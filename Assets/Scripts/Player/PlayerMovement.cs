@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isRushing = false;
     public float maxStamina = 100;
     public float staminaDropFactor = 10f; // per second
-    public float staminaRecharce = 20f; // per second
+    public float staminaRecharge = 20f; // per second
 
     [Header("Exhaust")]
     public float exhaustedSpeed = 3f;
@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (!hasExhausted)
         {
-            currentStamina += Time.deltaTime * staminaRecharce;
+            currentStamina += Time.deltaTime * staminaRecharge;
             currentSpeed = speed;
             Animator.SetBool("IsRunning", false);
             isRushing = false;
@@ -136,5 +136,14 @@ public class PlayerMovement : MonoBehaviour
         mousePosition.z = 0;
         //mousePosition.z = Mathf.Abs(mainCamera.transform.position.z - transform.position.z);
         return mainCamera.ScreenToWorldPoint(mousePosition);
+    }
+
+    public float GetExhaustedTimer()
+    {
+        return exhaustedTimer;
+    }
+    public bool HasExhausted()
+    {
+        return hasExhausted;
     }
 }
