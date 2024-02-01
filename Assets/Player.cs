@@ -48,6 +48,12 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damageValue)
+    {
+        currentHP -= damageValue;
+        currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+    }
+
     public void TryEat(Eatable eatable)
     {
         if (!playerMovement.IsRushing) return;
