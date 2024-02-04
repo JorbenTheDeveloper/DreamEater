@@ -13,9 +13,11 @@ public class Player : MonoBehaviour
 
     public float maxGrow = 4;
     public float Size => transform.localScale.x;
+    public float StartingSize = 1.2f;
 
     private PlayerMovement playerMovement;
     private PlayerShoot playerShoot;
+    public float sizeReduction = 0.1f;
 
     public float CurrentHP => currentHP;
 
@@ -32,6 +34,7 @@ public class Player : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerShoot = GetComponent<PlayerShoot>();
         currentHP = MaxHP;
+        transform.localScale = new Vector3(StartingSize, StartingSize, 1);
     }
 
     private void Update()
@@ -43,7 +46,7 @@ public class Player : MonoBehaviour
             bool isShot = playerShoot.ShootProjectile(Size, transform);
             if (isShot)
             {
-                Shrink(0.1f);
+                Shrink(sizeReduction);
             }
         }
     }

@@ -7,18 +7,11 @@ public class ScaleUI : MonoBehaviour
 {
     public Player player => Player.Instance;
     public TextMeshProUGUI scaleText;
-    
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
         float scaleX = player.transform.localScale.x;
-        scaleText.text = $"Size: {scaleX}";
+        scaleText.text = $"Size: {scaleX.ToString("0.0")}";
     }
 }
