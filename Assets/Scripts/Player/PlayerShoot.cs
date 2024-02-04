@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -13,7 +15,12 @@ public class PlayerShoot : MonoBehaviour
     private bool canShoot = true;
     private float shootTimer = 0;
 
-    // Update is called once per frame
+    public Image abilityImage;
+    public Sprite canShootSprite;
+    public Sprite cannotShootSprite; 
+
+    public TextMeshProUGUI shootIntervalText;
+
     void Update()
     {
         shootTimer -= Time.deltaTime;
@@ -21,10 +28,14 @@ public class PlayerShoot : MonoBehaviour
         if (shootTimer <= 0)
         {
             canShoot = true;
+            abilityImage.sprite = canShootSprite;
+            shootIntervalText.text = ""; 
         }
         else
         {
             canShoot = false;
+            abilityImage.sprite = cannotShootSprite; 
+            shootIntervalText.text = shootTimer.ToString("F1") + "";
         }
     }
 
@@ -33,22 +44,16 @@ public class PlayerShoot : MonoBehaviour
         if (!canShoot) return false;
         shootTimer = shootInterval;
 
-        // Instantiate the projectile
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
-
-        // Set the size of the projectile
         projectile.transform.localScale = new Vector3(size, size, 1.0f);
-
-        // Get the rigidbody of the projectile
         Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
 
-        // Set the velocity of the projectile based on the player's rotation
         Vector2 projectileDirection = new Vector2(Mathf.Cos(playerTransform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(playerTransform.rotation.eulerAngles.z * Mathf.Deg2Rad));
         projectileRb.velocity = projectileDirection * projectileSpeed;
 
-        // Destroy the projectile after 5 seconds
         Destroy(projectile, 5f);
 
         return true;
     }
 }
+
