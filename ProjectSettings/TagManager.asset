@@ -17,6 +17,7 @@ TagManager:
   - acid
   - Tree
   - Wall
+  - PlayerBody
   layers:
   - Default
   - TransparentFX

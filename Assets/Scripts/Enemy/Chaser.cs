@@ -26,11 +26,13 @@ public class Chaser : MonoBehaviour
     private float chaseWaitSecondPassed = 0f;
 
     private NavMeshAgent agent;
+    private Animator animator;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -48,6 +50,7 @@ public class Chaser : MonoBehaviour
         {
             patrolWaitSecondPassed = 0;
             agent.isStopped = true;
+            animator.SetBool("IsWalking", false);
 
             if (Size >= player.Size)
             {
@@ -55,14 +58,18 @@ public class Chaser : MonoBehaviour
                 if (chaseWaitSecondPassed >= ChaseWaitDuration)
                 {
                     agent.isStopped = false;
+                    animator.SetBool("IsWalking", true);
                     agent.SetDestination(player.transform.position);
+                    TurnToDirection();
                 }
             }
             else
             {
                 var oppositeDir = (transform.position - player.transform.position).normalized;
                 agent.isStopped = false;
+                animator.SetBool("IsWalking", true);
                 agent.SetDestination(transform.position + oppositeDir);
+                TurnToDirection();
             }
         }
         else
@@ -70,12 +77,15 @@ public class Chaser : MonoBehaviour
             patrolWaitSecondPassed += Time.deltaTime;
             chaseWaitSecondPassed = 0;
             agent.isStopped = true;
+            animator.SetBool("IsWalking", false);
             var nextPatrolPos = PatrollingPositions[patrolIndex].transform.position;
             
             if (patrolWaitSecondPassed >= PatrolWaitDuration)
             {
                 agent.isStopped = false;
+                animator.SetBool("IsWalking", true);
                 agent.SetDestination(nextPatrolPos);
+                TurnToDirection();
             }
 
             if (Vector3.Distance(transform.position, nextPatrolPos) < 4)
@@ -92,6 +102,14 @@ public class Chaser : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void TurnToDirection()
+    {
+        var dir = agent.steeringTarget - transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90;
+        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = rotation;
     }
 
     private void OnDrawGizmos()

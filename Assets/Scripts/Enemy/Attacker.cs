@@ -10,19 +10,22 @@ public class Attacker : MonoBehaviour
 
     private Player collidingPlayer = null;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Start()
     {
-        if (collision.gameObject.CompareTag("Player"))
+        attackCoolDownTimer = 0;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PlayerBody"))
         {
-            attackCoolDownTimer = 0;
-            collidingPlayer = collision.gameObject.GetComponent<Player>();
-            collidingPlayer.TakeDamage(DamageAmount);
+            collidingPlayer = collision.GetComponentInParent<Player>();
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("PlayerBody"))
         {
             collidingPlayer = null;
         }
@@ -30,13 +33,17 @@ public class Attacker : MonoBehaviour
 
     private void Update()
     {
-        if (collidingPlayer == null) return;
-        attackCoolDownTimer += Time.deltaTime;
-
-        if (attackCoolDownTimer >= AttackCoolDown)
+        if (attackCoolDownTimer > 0)
         {
+            attackCoolDownTimer -= Time.deltaTime;
+        }
+
+        if (collidingPlayer == null) return;
+
+        if (attackCoolDownTimer <= 0)
+        {
+            attackCoolDownTimer = AttackCoolDown;
             collidingPlayer.TakeDamage(DamageAmount);
-            attackCoolDownTimer = 0;
         }
     }
 }
