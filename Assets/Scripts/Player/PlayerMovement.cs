@@ -31,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Animator Animator;
 
+    [Header("Particle Effects")]
+    public ParticleSystem movementParticles;
+
     public bool IsRushing => isRushing;
 
     private void Start()
@@ -46,14 +49,19 @@ public class PlayerMovement : MonoBehaviour
     {
         UpdateRushing();
 
-        if (IsMouseOverPlayer())
+        bool isMoving = !IsMouseOverPlayer();
+        UpdateParticleEffects(isMoving);
+
+        if (isMoving)
+        {
+            Animator.SetBool("IsWalking", true);
+            MoveAndRotate();
+        }
+        else
         {
             Animator.SetBool("IsRunning", false);
             Animator.SetBool("IsWalking", false);
-            return;
         }
-        Animator.SetBool("IsWalking", true);
-        MoveAndRotate();
     }
 
     private void UpdateRushing()
@@ -145,5 +153,26 @@ public class PlayerMovement : MonoBehaviour
     public bool HasExhausted()
     {
         return hasExhausted;
+    }
+
+    private void UpdateParticleEffects(bool isMoving)
+    {
+        var emissionModule = movementParticles.emission;
+        emissionModule.enabled = isMoving || isRushing; 
+
+        if (isMoving)
+        {
+            if (!movementParticles.isPlaying)
+                movementParticles.Play();
+
+            
+            var mainModule = movementParticles.main;
+            mainModule.simulationSpeed = isRushing ? 2.0f : 1.0f;
+        }
+        else
+        {
+            if (movementParticles.isPlaying)
+                movementParticles.Stop();
+        }
     }
 }
