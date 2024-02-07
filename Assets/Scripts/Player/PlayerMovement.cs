@@ -20,12 +20,15 @@ public class PlayerMovement : MonoBehaviour
     public float maxStamina = 100;
     public float staminaDropFactor = 10f; // Stamina consumption per second while rushing
     public float staminaRecharge = 20f; // Stamina recharge rate per second
+    public bool IsRushing => isRushing;
 
     [Header("Exhaust")]
     public float exhaustedSpeed = 3f;
     private bool hasExhausted = false;
     public float exhaustedDuration = 3f;
     private float exhaustedTimer = 0;
+    public float GetExhaustedTimer() => exhaustedTimer;
+    public bool HasExhausted() => hasExhausted;
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
 
@@ -36,7 +39,10 @@ public class PlayerMovement : MonoBehaviour
     public float particleSpawnTimer = 0f;
     public float particleSpawnInterval = 2f; // Interval between particle spawns
 
-    public bool IsRushing => isRushing;
+    [Header("Slow Layer")]
+    public LayerMask mudLayer; // Assign this in the Inspector
+    private bool isInMud = false;
+    public float mudSpeed = 5f;
 
     private void Start()
     {
@@ -51,6 +57,11 @@ public class PlayerMovement : MonoBehaviour
         HandleMovementAndRotation();
         UpdateRushing();
         HandleParticleEffectSpawn();
+        if (isInMud)
+        {
+            currentSpeed = mudSpeed;
+        }
+
     }
 
     void HandleMovementAndRotation()
@@ -150,6 +161,23 @@ public class PlayerMovement : MonoBehaviour
         Destroy(effect, 2f); // Automatically destroy the spawned effect after 2 seconds
     }
 
-    public float GetExhaustedTimer() => exhaustedTimer;
-    public bool HasExhausted() => hasExhausted;
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        
+        if (other.gameObject.layer == LayerMask.NameToLayer("Mud"))
+        {
+            isInMud = true;
+            currentSpeed = mudSpeed;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        
+        if (other.gameObject.layer == LayerMask.NameToLayer("Mud"))
+        {
+            isInMud = false;
+            currentSpeed = speed;
+        }
+    }
 }
