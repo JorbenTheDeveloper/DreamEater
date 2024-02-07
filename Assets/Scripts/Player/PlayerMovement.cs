@@ -18,8 +18,8 @@ public class PlayerMovement : MonoBehaviour
     public float currentStamina;
     private bool isRushing = false;
     public float maxStamina = 100;
-    public float staminaDropFactor = 10f; // per second
-    public float staminaRecharge = 20f; // per second
+    public float staminaDropFactor = 10f; // Stamina consumption per second while rushing
+    public float staminaRecharge = 20f; // Stamina recharge rate per second
 
     [Header("Exhaust")]
     public float exhaustedSpeed = 3f;
@@ -29,10 +29,12 @@ public class PlayerMovement : MonoBehaviour
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
 
-    private Animator Animator;
+    private Animator animator;
 
     [Header("Particle Effects")]
-    public ParticleSystem movementParticles;
+    public GameObject particleEffectPrefab; // Assign your particle prefab in the inspector
+    public float particleSpawnTimer = 0f;
+    public float particleSpawnInterval = 2f; // Interval between particle spawns
 
     public bool IsRushing => isRushing;
 
@@ -41,138 +43,113 @@ public class PlayerMovement : MonoBehaviour
         mainCamera = Camera.main;
         currentStamina = maxStamina;
         currentSpeed = speed;
-
-        Animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
+        HandleMovementAndRotation();
         UpdateRushing();
+        HandleParticleEffectSpawn();
+    }
 
-        bool isMoving = !IsMouseOverPlayer();
-        UpdateParticleEffects(isMoving);
-
-        if (isMoving)
+    void HandleMovementAndRotation()
+    {
+        Vector2 targetPosition = GetWorldPositionFromMouse();
+        if (!IsMouseOverPlayer())
         {
-            Animator.SetBool("IsWalking", true);
-            MoveAndRotate();
+            MoveAndRotate(targetPosition);
+            animator.SetBool("IsWalking", true);
         }
         else
         {
-            Animator.SetBool("IsRunning", false);
-            Animator.SetBool("IsWalking", false);
+            animator.SetBool("IsWalking", false);
+            animator.SetBool("IsRunning", false);
         }
     }
 
-    private void UpdateRushing()
+    void UpdateRushing()
     {
-        if (Input.GetMouseButton(0))
-        {
-            if (currentStamina > 0)
-            {
-                currentSpeed = speed * 2;
+        isRushing = Input.GetMouseButton(0) && currentStamina > 0 && !hasExhausted;
 
-                currentStamina -= Time.deltaTime * staminaDropFactor;
-                Animator.SetBool("IsRunning", true);
-                Animator.SetBool("IsWalking", false);
-                isRushing = true;
-            }
-            else
-            {
-                hasExhausted = true;
-                currentSpeed = exhaustedSpeed;
-                Animator.SetBool("IsRunning", false);
-                isRushing = false;
-            }
-        }
-        else if (!hasExhausted)
+        if (isRushing)
         {
-            currentStamina += Time.deltaTime * staminaRecharge;
+            currentSpeed = speed * 2;
+            currentStamina -= Time.deltaTime * staminaDropFactor;
+            animator.SetBool("IsRunning", true);
+        }
+        else
+        {
             currentSpeed = speed;
-            Animator.SetBool("IsRunning", false);
+            animator.SetBool("IsRunning", false);
+            if (!hasExhausted) currentStamina += Time.deltaTime * staminaRecharge;
+        }
+
+        if (currentStamina <= 0)
+        {
+            hasExhausted = true;
             isRushing = false;
+            currentSpeed = exhaustedSpeed; // Apply exhausted speed
         }
 
         if (hasExhausted)
         {
             exhaustedTimer += Time.deltaTime;
-
-            if (exhaustedTimer > exhaustedDuration)
+            if (exhaustedTimer >= exhaustedDuration)
             {
                 hasExhausted = false;
                 exhaustedTimer = 0;
-                currentStamina = maxStamina;
+                currentStamina = maxStamina; // Reset stamina after exhaustion period
+                currentSpeed = speed; // Reset speed after exhaustion ends
             }
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
-
     }
 
-    private void MoveAndRotate()
+    void MoveAndRotate(Vector2 targetPosition)
     {
-        transform.position = Vector2.MoveTowards(transform.position, GetWorldPositionFromMouse(),
-                currentSpeed * Time.deltaTime);
-        RotateToMouse();
-    }
+        transform.position = Vector2.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
 
-    private void RotateToMouse()
-    {
-        Vector2 direction = GetWorldPositionFromMouse() - transform.position;
+        Vector2 direction = targetPosition - (Vector2)transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = rotation;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
-    private bool IsMouseOverPlayer()
+    Vector2 GetWorldPositionFromMouse()
     {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 0;
-        // mousePosition.z = Mathf.Abs(mainCamera.transform.position.z - transform.position.z);
-        Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(mousePosition);
-
-        float distance = Vector2.Distance(transform.position, new Vector2(mouseWorldPosition.x, mouseWorldPosition.y));
-
-        float mouseOverThreshold = 1.0f;
-
-        return distance < mouseOverThreshold;
+        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+        return mousePos;
     }
 
-    private Vector3 GetWorldPositionFromMouse()
+    bool IsMouseOverPlayer()
     {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 0;
-        //mousePosition.z = Mathf.Abs(mainCamera.transform.position.z - transform.position.z);
-        return mainCamera.ScreenToWorldPoint(mousePosition);
+        Vector2 mousePosition = GetWorldPositionFromMouse();
+        return Vector2.Distance(mousePosition, transform.position) < 1.0f;
     }
 
-    public float GetExhaustedTimer()
+    void HandleParticleEffectSpawn()
     {
-        return exhaustedTimer;
-    }
-    public bool HasExhausted()
-    {
-        return hasExhausted;
-    }
-
-    private void UpdateParticleEffects(bool isMoving)
-    {
-        var emissionModule = movementParticles.emission;
-        emissionModule.enabled = isMoving || isRushing; 
-
-        if (isMoving)
+        // Spawn particles only when the player is rushing
+        if (isRushing && particleSpawnTimer >= particleSpawnInterval)
         {
-            if (!movementParticles.isPlaying)
-                movementParticles.Play();
-
-            
-            var mainModule = movementParticles.main;
-            mainModule.simulationSpeed = isRushing ? 2.0f : 1.0f;
+            SpawnParticleEffect();
+            particleSpawnTimer = 0f; // Reset the timer after spawning
         }
         else
         {
-            if (movementParticles.isPlaying)
-                movementParticles.Stop();
+            
+            particleSpawnTimer += Time.deltaTime;
         }
     }
+
+    void SpawnParticleEffect()
+    {
+        GameObject effect = Instantiate(particleEffectPrefab, transform.position, Quaternion.identity);
+        Destroy(effect, 2f); // Automatically destroy the spawned effect after 2 seconds
+    }
+
+    public float GetExhaustedTimer() => exhaustedTimer;
+    public bool HasExhausted() => hasExhausted;
 }
