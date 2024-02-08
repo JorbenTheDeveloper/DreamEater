@@ -142,16 +142,10 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleParticleEffectSpawn()
     {
-        // Spawn particles only when the player is rushing
-        if (isRushing && particleSpawnTimer >= particleSpawnInterval)
+        if (Input.GetMouseButtonDown(0))
         {
+            // Spawn the particle effect
             SpawnParticleEffect();
-            particleSpawnTimer = 0f; // Reset the timer after spawning
-        }
-        else
-        {
-            
-            particleSpawnTimer += Time.deltaTime;
         }
     }
 

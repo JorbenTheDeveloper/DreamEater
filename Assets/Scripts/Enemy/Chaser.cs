@@ -112,9 +112,11 @@ public class Chaser : MonoBehaviour
         transform.rotation = rotation;
     }
 
+    #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Handles.color = Color.red;
-        Handles.DrawWireArc(transform.position, Vector3.forward, Vector3.up, 360, ChaseRange);
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireArc(transform.position, Vector3.forward, Vector3.up, 360, ChaseRange);
     }
+    #endif
 }
