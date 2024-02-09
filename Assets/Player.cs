@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
     public float sizeReduction = 0.1f;
 
     public float CurrentHP => currentHP;
+    public CinemachineVirtualCamera cinemachineCamera;
 
     private void Awake()
     {
@@ -35,6 +37,8 @@ public class Player : MonoBehaviour
         playerShoot = GetComponent<PlayerShoot>();
         currentHP = MaxHP;
         transform.localScale = new Vector3(StartingSize, StartingSize, 1);
+
+        AdjustCameraSize();
     }
 
     private void Update()
@@ -80,9 +84,23 @@ public class Player : MonoBehaviour
     private void Shrink(float value)
     {
         transform.localScale = new Vector3(transform.localScale.x - value, transform.localScale.y - value, 1);
+        AdjustCameraSize();
     }
     private void Grow(float value)
     {
         transform.localScale = new Vector3(transform.localScale.x + value, transform.localScale.y + value, 1);
+        AdjustCameraSize();
+    }
+
+    private void AdjustCameraSize()
+    {
+        if (cinemachineCamera != null)
+        {
+            float sizeRatio = transform.localScale.x / StartingSize;
+
+            float baseOrthographicSize = 6 * (StartingSize / 1f);
+
+            cinemachineCamera.m_Lens.OrthographicSize = baseOrthographicSize * sizeRatio;
+        }
     }
 }

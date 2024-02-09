@@ -74,30 +74,39 @@ public class Chaser : MonoBehaviour
         }
         else
         {
+            // Only add an early return if PatrollingPositions is empty
+            if (PatrollingPositions.Count == 0)
+            {
+                // If there are no patrolling positions, ensure the chaser doesn't move.
+                agent.isStopped = true;
+                animator.SetBool("IsWalking", false);
+                return; // Exit early from the Update method
+            }
+
             patrolWaitSecondPassed += Time.deltaTime;
             chaseWaitSecondPassed = 0;
             agent.isStopped = true;
             animator.SetBool("IsWalking", false);
-            var nextPatrolPos = PatrollingPositions[patrolIndex].transform.position;
-            
             if (patrolWaitSecondPassed >= PatrolWaitDuration)
             {
                 agent.isStopped = false;
                 animator.SetBool("IsWalking", true);
+
+                var nextPatrolPos = PatrollingPositions[patrolIndex].transform.position;
                 agent.SetDestination(nextPatrolPos);
                 TurnToDirection();
-            }
 
-            if (Vector3.Distance(transform.position, nextPatrolPos) < 4)
-            {
-                patrolWaitSecondPassed = 0;
-                patrolIndex++;
-                if (patrolIndex >= PatrollingPositions.Count)
+                if (Vector3.Distance(transform.position, nextPatrolPos) < 4)
                 {
-                    patrolIndex = 0;
-                    if (PatrolRandomize)
+                    patrolWaitSecondPassed = 0;
+                    patrolIndex++;
+                    if (patrolIndex >= PatrollingPositions.Count)
                     {
-                        PatrollingPositions = PatrollingPositions.OrderBy(i => System.Guid.NewGuid()).ToList();
+                        patrolIndex = 0;
+                        if (PatrolRandomize)
+                        {
+                            PatrollingPositions = PatrollingPositions.OrderBy(i => System.Guid.NewGuid()).ToList();
+                        }
                     }
                 }
             }
