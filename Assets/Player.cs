@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
         currentHP = MaxHP;
         transform.localScale = new Vector3(StartingSize, StartingSize, 1);
 
-        AdjustCameraSize();
+        StartCoroutine(AdjustCameraSize(1));
     }
 
     private void Update()
@@ -84,23 +84,29 @@ public class Player : MonoBehaviour
     private void Shrink(float value)
     {
         transform.localScale = new Vector3(transform.localScale.x - value, transform.localScale.y - value, 1);
-        AdjustCameraSize();
+        StartCoroutine(AdjustCameraSize(1));
     }
     private void Grow(float value)
     {
         transform.localScale = new Vector3(transform.localScale.x + value, transform.localScale.y + value, 1);
-        AdjustCameraSize();
+        StartCoroutine(AdjustCameraSize(1));
     }
 
-    private void AdjustCameraSize()
+    IEnumerator AdjustCameraSize(float totalTime)
     {
         if (cinemachineCamera != null)
         {
             float sizeRatio = transform.localScale.x / StartingSize;
-
             float baseOrthographicSize = 6 * (StartingSize / 1f);
+            float passedTime = 0;
 
-            cinemachineCamera.m_Lens.OrthographicSize = baseOrthographicSize * sizeRatio;
+            while (passedTime < totalTime)
+            {
+                float step = Mathf.SmoothStep(cinemachineCamera.m_Lens.OrthographicSize, baseOrthographicSize * sizeRatio, passedTime / totalTime);
+                cinemachineCamera.m_Lens.OrthographicSize = step;
+                passedTime += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
         }
     }
 }
