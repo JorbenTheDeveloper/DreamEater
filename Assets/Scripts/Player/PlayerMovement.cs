@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using UnityEngine.AI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -44,17 +45,22 @@ public class PlayerMovement : MonoBehaviour
     private bool isInMud = false;
     public float mudSpeed = 5f;
 
+    NavMeshAgent agent;
+
     private void Start()
     {
         mainCamera = Camera.main;
         currentStamina = maxStamina;
         currentSpeed = speed;
         animator = GetComponent<Animator>();
+
+        agent = GetComponent <NavMeshAgent>();
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
     }
 
     private void Update()
     {
-        HandleMovementAndRotation();
         UpdateRushing();
         HandleParticleEffectSpawn();
         if (isInMud)
@@ -62,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = mudSpeed;
         }
 
+        agent.speed = currentSpeed;
+        HandleMovementAndRotation();
     }
 
     void HandleMovementAndRotation()
@@ -120,11 +128,11 @@ public class PlayerMovement : MonoBehaviour
 
     void MoveAndRotate(Vector2 targetPosition)
     {
-        transform.position = Vector2.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
-
         Vector2 direction = targetPosition - (Vector2)transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        agent.SetDestination(targetPosition);
     }
 
     Vector2 GetWorldPositionFromMouse()
