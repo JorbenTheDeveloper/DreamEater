@@ -160,7 +160,11 @@ public class PlayerMovement : MonoBehaviour
     void SpawnParticleEffect()
     {
         GameObject effect = Instantiate(particleEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(effect, 2f); // Automatically destroy the spawned effect after 2 seconds
+
+        // Set the particle effect's scale to match the player's scale
+        effect.transform.localScale = transform.localScale;
+
+        Destroy(effect, 2f);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -182,4 +186,5 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = speed;
         }
     }
+
 }
