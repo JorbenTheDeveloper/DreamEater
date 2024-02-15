@@ -10,4 +10,8 @@ public class SceneSwitcher : MonoBehaviour
         // Change "Testing" to the name of your testing scene
         SceneManager.LoadScene("Tutorial");
     }
+    public void LoadLevelOne()
+    {
+        SceneManager.LoadScene("LevelOne");
+    }
 }

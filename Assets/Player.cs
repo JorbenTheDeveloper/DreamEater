@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -59,6 +60,11 @@ public class Player : MonoBehaviour
     {
         currentHP -= damageValue;
         currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+
+        if (currentHP <= 0)
+        {
+            SceneManager.LoadScene("Retry");
+        }
     }
 
     public void TryEat(Eatable eatable)
