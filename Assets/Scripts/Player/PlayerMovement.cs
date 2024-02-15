@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 using UnityEngine.AI;
+using System.Drawing;
+using static Unity.Burst.Intrinsics.X86;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Speed")]
     public float currentSpeed;
+    public float BaseSpeed = 2;
+    public float SpeedMultiplier = 2;
     public float speed = 10f;
 
     [Header("Rushing")]
@@ -47,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
 
     NavMeshAgent agent;
 
+    public float Size => transform.localScale.x;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -59,14 +65,23 @@ public class PlayerMovement : MonoBehaviour
         agent.updateUpAxis = false;
     }
 
+    private float GetSpeedBySize()
+    {
+        return BaseSpeed + Size * SpeedMultiplier;
+    }
+
     private void Update()
     {
+        speed = GetSpeedBySize();
+
         UpdateRushing();
         HandleParticleEffectSpawn();
         if (isInMud)
         {
             currentSpeed = mudSpeed;
         }
+
+         
 
         agent.speed = currentSpeed;
         HandleMovementAndRotation();
