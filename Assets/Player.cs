@@ -44,14 +44,14 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        //if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Size < 0.5f) return;
+            //if (Size < 0.5f) return;
 
-            bool isShot = playerShoot.ShootProjectile(Size, transform);
-            if (isShot)
+            //bool isShot = playerShoot.ShootProjectile(Size, transform);
+            //if (isShot)
             {
-                Shrink(sizeReduction);
+                //Shrink(sizeReduction);
             }
         }
     }
