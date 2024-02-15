@@ -147,7 +147,14 @@ public class PlayerMovement : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        agent.SetDestination(targetPosition);
+        if (agent.Raycast(targetPosition, out var hit))
+        {
+            agent.SetDestination(hit.position);
+        }
+        else
+        {
+            agent.SetDestination(targetPosition);
+        }
     }
 
     Vector2 GetWorldPositionFromMouse()
