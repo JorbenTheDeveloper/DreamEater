@@ -32,6 +32,12 @@ public class BunnyBoss : MonoBehaviour
     public float DamagebleCoolDown = 2;
     public float DamagebleTimer = 0;
 
+    [Header("Spawning")]
+    public int[] EnemyCountForRound;
+    public GameObject SmallBunnyPrefab;
+    private int currentSpawnRound = 0;
+    private bool IsSpawnPhase = false;
+
     private bool IsVulnerable => HopCount >= MaxHopBeforeVulnerable;
 
     // for testing
@@ -64,6 +70,11 @@ public class BunnyBoss : MonoBehaviour
         if (!StartAttacking) return;
         DamagebleTimer += Time.deltaTime;
 
+        if (IsSpawnPhase)
+        {
+            
+            return;
+        }
         if (CanHop)
         {
             HopCount++;
@@ -92,6 +103,11 @@ public class BunnyBoss : MonoBehaviour
             {
                 DamagebleTimer = 0;
                 CurrentHP -= 5;
+
+                if (CurrentHP <= MaxHP / 2)
+                {
+                    IsSpawnPhase = true;
+                }
 
                 if (CurrentHP <= 0)
                 {
