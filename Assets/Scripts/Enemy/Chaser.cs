@@ -12,10 +12,11 @@ public class Chaser : MonoBehaviour
 
     public float ChaseRange = 20f;
     public float Speed = 3f;
-
+    public bool AlwaysChase = false;
     private float DistanceToPlayer => Vector3.Distance(player.transform.position, transform.position);
     private float Size => eatable.Size;
 
+    [Header("Patrolling")]
     public List<GameObject> PatrollingPositions;
     public bool PatrolRandomize = false;
     private int patrolIndex = 0;
@@ -41,6 +42,7 @@ public class Chaser : MonoBehaviour
         {
             PatrollingPositions = PatrollingPositions.OrderBy(i => System.Guid.NewGuid()).ToList();
         }
+        agent.speed = Speed;
     }
 
     // Update is called once per frame
@@ -52,9 +54,10 @@ public class Chaser : MonoBehaviour
             agent.isStopped = true;
             animator.SetBool("IsWalking", false);
 
-            if (Size >= player.Size)
+            if (AlwaysChase || Size >= player.Size)
             {
                 chaseWaitSecondPassed += Time.deltaTime;
+                
                 if (chaseWaitSecondPassed >= ChaseWaitDuration)
                 {
                     agent.isStopped = false;
