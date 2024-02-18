@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
 
         if (Size >= eatable.Size)
         {
-            Destroy(eatable.gameObject);
+            eatable.TakeDamage();
 
             if (IsMaxGrow() == false)
             {
