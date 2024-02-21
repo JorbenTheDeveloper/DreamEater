@@ -151,4 +151,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Life: 1
   Size: 0.1
+  IgnoreSize: 1
   growRate: 0.1

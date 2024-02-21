@@ -20,7 +20,6 @@ public class PlayerShoot : MonoBehaviour
     public Sprite cannotShootSprite;
 
     public TextMeshProUGUI shootIntervalText;
-    private GameObject currentProjectile = null;
 
     public float sizeReduction = 0.1f;
 
@@ -44,31 +43,24 @@ public class PlayerShoot : MonoBehaviour
         // Check for shooting input within the Update method
         if (Input.GetKeyDown(KeyCode.Space) && canShoot && Player.Instance.Size > 0.5f)
         {
-            if (ShootProjectile(Player.Instance.Size, transform))
-            {
-                Player.Instance.Shrink(sizeReduction); // Call Shrink method on Player
-            }
+            ShootProjectile(Player.Instance.Size, transform);
         }
     }
 
-    public bool ShootProjectile(float size, Transform playerTransform)
+    public void ShootProjectile(float size, Transform playerTransform)
     {
-        if (!canShoot || Player.Instance.Size < 0.5f) return false; // Ensure the player's size is considered
-
         shootTimer = shootInterval;
 
-        currentProjectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+        var currentProjectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
         currentProjectile.transform.localScale = new Vector3(size, size, 1.0f);
+        currentProjectile.GetComponent<Eatable>().Size = size;
         Rigidbody2D projectileRb = currentProjectile.GetComponent<Rigidbody2D>();
 
         Vector2 projectileDirection = new Vector2(Mathf.Cos(playerTransform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(playerTransform.rotation.eulerAngles.z * Mathf.Deg2Rad));
         projectileRb.velocity = projectileDirection * projectileSpeed;
 
-        // Optionally, clear the current projectile when it's destroyed.
-        Destroy(currentProjectile, 5f); // Adjust time as needed
-        currentProjectile = null; // Reset current projectile
-
-        return true;
+        // shrink the player
+        Player.Instance.Shrink(sizeReduction);
     }
 }
 

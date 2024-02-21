@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
     {
         if (!playerMovement.IsRushing) return;
 
-        if (Size >= eatable.Size)
+        if (Size >= eatable.Size || eatable.IgnoreSize)
         {
             eatable.TakeDamage();
 
@@ -112,30 +112,6 @@ public class Player : MonoBehaviour
                 cinemachineCamera.m_Lens.OrthographicSize = step;
                 passedTime += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
-            }
-        }
-    }
-
-    public void AbsorbProjectileGrowth(AbsorbProjectile projectile)
-    {
-        float growth = projectile.ConsumeGrowth();
-        // Only allow growth if above the minimum size or if the growth won't exceed the max size.
-        if (Size > 0.5f || (Size == 0.5f && growth + Size <= maxGrow))
-        {
-            Grow(growth);
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Projectile")) 
-        {
-            AbsorbProjectile projectile = other.gameObject.GetComponent<AbsorbProjectile>();
-            if (projectile != null)
-            {
-                float growthAmount = projectile.ConsumeGrowth();
-                Grow(growthAmount); // Apply the growth to the player.
-                Destroy(other.gameObject); // Destroy the projectile after absorbing its growth.
             }
         }
     }

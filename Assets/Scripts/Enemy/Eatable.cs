@@ -6,6 +6,7 @@ public class Eatable : MonoBehaviour
 {
     public int Life = 1;
     public float Size;
+    public bool IgnoreSize = false;
     public float growRate = 0.1f;
 
     public void TakeDamage()
