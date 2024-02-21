@@ -44,16 +44,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        {
-            //if (Size < 0.5f) return;
-
-            //bool isShot = playerShoot.ShootProjectile(Size, transform);
-            //if (isShot)
-            {
-                //Shrink(sizeReduction);
-            }
-        }
+        
     }
 
     public void TakeDamage(int damageValue)
@@ -87,14 +78,23 @@ public class Player : MonoBehaviour
         return transform.localScale.x >= maxGrow;
     }
 
-    private void Shrink(float value)
+    public void Shrink(float value)
     {
-        transform.localScale = new Vector3(transform.localScale.x - value, transform.localScale.y - value, 1);
+        // Calculate the new size but do not allow it to go below 0.5
+        float newSize = Mathf.Max(0.5f, Size - value);
+        transform.localScale = new Vector3(newSize, newSize, 1.0f); // Assuming uniform scaling for simplicity
+
+        // Optionally, adjust the camera size or other related attributes here
         StartCoroutine(AdjustCameraSize(1));
     }
     private void Grow(float value)
     {
-        transform.localScale = new Vector3(transform.localScale.x + value, transform.localScale.y + value, 1);
+        // Calculate the new size and ensure it doesn't exceed maxGrow.
+        float newSizeX = Mathf.Min(transform.localScale.x + value, maxGrow);
+        float newSizeY = Mathf.Min(transform.localScale.y + value, maxGrow);
+
+        // Apply the new size.
+        transform.localScale = new Vector3(newSizeX, newSizeY, 1);
         StartCoroutine(AdjustCameraSize(1));
     }
 
@@ -112,6 +112,30 @@ public class Player : MonoBehaviour
                 cinemachineCamera.m_Lens.OrthographicSize = step;
                 passedTime += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
+            }
+        }
+    }
+
+    public void AbsorbProjectileGrowth(AbsorbProjectile projectile)
+    {
+        float growth = projectile.ConsumeGrowth();
+        // Only allow growth if above the minimum size or if the growth won't exceed the max size.
+        if (Size > 0.5f || (Size == 0.5f && growth + Size <= maxGrow))
+        {
+            Grow(growth);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Projectile")) 
+        {
+            AbsorbProjectile projectile = other.gameObject.GetComponent<AbsorbProjectile>();
+            if (projectile != null)
+            {
+                float growthAmount = projectile.ConsumeGrowth();
+                Grow(growthAmount); // Apply the growth to the player.
+                Destroy(other.gameObject); // Destroy the projectile after absorbing its growth.
             }
         }
     }

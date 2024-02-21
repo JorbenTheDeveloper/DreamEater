@@ -17,9 +17,12 @@ public class PlayerShoot : MonoBehaviour
 
     public Image abilityImage;
     public Sprite canShootSprite;
-    public Sprite cannotShootSprite; 
+    public Sprite cannotShootSprite;
 
     public TextMeshProUGUI shootIntervalText;
+    private GameObject currentProjectile = null;
+
+    public float sizeReduction = 0.1f;
 
     void Update()
     {
@@ -29,29 +32,41 @@ public class PlayerShoot : MonoBehaviour
         {
             canShoot = true;
             abilityImage.sprite = canShootSprite;
-            shootIntervalText.text = ""; 
+            shootIntervalText.text = "";
         }
         else
         {
             canShoot = false;
-            abilityImage.sprite = cannotShootSprite; 
-            shootIntervalText.text = shootTimer.ToString("F1") + "";
+            abilityImage.sprite = cannotShootSprite;
+            shootIntervalText.text = shootTimer.ToString("F1");
+        }
+
+        // Check for shooting input within the Update method
+        if (Input.GetKeyDown(KeyCode.Space) && canShoot && Player.Instance.Size > 0.5f)
+        {
+            if (ShootProjectile(Player.Instance.Size, transform))
+            {
+                Player.Instance.Shrink(sizeReduction); // Call Shrink method on Player
+            }
         }
     }
 
     public bool ShootProjectile(float size, Transform playerTransform)
     {
-        if (!canShoot) return false;
+        if (!canShoot || Player.Instance.Size < 0.5f) return false; // Ensure the player's size is considered
+
         shootTimer = shootInterval;
 
-        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
-        projectile.transform.localScale = new Vector3(size, size, 1.0f);
-        Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
+        currentProjectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+        currentProjectile.transform.localScale = new Vector3(size, size, 1.0f);
+        Rigidbody2D projectileRb = currentProjectile.GetComponent<Rigidbody2D>();
 
         Vector2 projectileDirection = new Vector2(Mathf.Cos(playerTransform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(playerTransform.rotation.eulerAngles.z * Mathf.Deg2Rad));
         projectileRb.velocity = projectileDirection * projectileSpeed;
 
-        Destroy(projectile, 5f);
+        // Optionally, clear the current projectile when it's destroyed.
+        Destroy(currentProjectile, 5f); // Adjust time as needed
+        currentProjectile = null; // Reset current projectile
 
         return true;
     }
