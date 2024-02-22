@@ -35,8 +35,11 @@ public class BunnyBoss : MonoBehaviour
     [Header("Spawning")]
     public int[] EnemyCountForRound;
     public GameObject SmallBunnyPrefab;
+    public GameObject[] SpawnPositions;
+    private List<GameObject> SpawnedObjects;
     private int currentSpawnRound = 0;
     private bool IsSpawnPhase = false;
+    private bool CanSpawn = false;
 
     private bool IsVulnerable => HopCount >= MaxHopBeforeVulnerable;
 
@@ -56,6 +59,9 @@ public class BunnyBoss : MonoBehaviour
         DamagebleTimer = DamagebleCoolDown;
         CurrentHP = MaxHP;
 
+        IsSpawnPhase = true;
+        CanSpawn = true;
+
         Invoke(nameof(StartAttack), 2);
     }
 
@@ -72,14 +78,54 @@ public class BunnyBoss : MonoBehaviour
 
         if (IsSpawnPhase)
         {
-            
-            return;
+            if (CanSpawn)
+            {
+                CanSpawn = false;
+                StartSpawing();
+            }
+            else
+            {
+/*                bool allDead = true;
+                SpawnedObjects.ForEach((item) => {
+                    if (item.activeInHierarchy)
+                    {
+                        allDead = false;
+                    }
+                });
+
+                if (allDead)
+                {
+                    SpawnedObjects.Clear();
+                    CanSpawn = true;
+                    currentSpawnRound++;
+                }*/
+            }
         }
-        if (CanHop)
+        else if (CanHop)
         {
             HopCount++;
             CanHop = false;
             StartCoroutine(Hop());
+        }
+    }
+
+    void StartSpawing()
+    {
+        if (currentSpawnRound >= EnemyCountForRound.Length) return;
+
+
+        SpawnedObjects = new List<GameObject>();
+        int objectCountToSpawn = EnemyCountForRound[currentSpawnRound];
+        int spawnPosIndex = 0;
+        for (int i = 0; i < objectCountToSpawn; i++)
+        {
+            var spawnPos = SpawnPositions[spawnPosIndex].transform.position;
+            var bunny = Instantiate(SmallBunnyPrefab, spawnPos, SmallBunnyPrefab.transform.rotation);
+            SpawnedObjects.Add(bunny);
+
+            spawnPosIndex++;
+            if (spawnPosIndex >= SpawnPositions.Length)
+                spawnPosIndex = 0;
         }
     }
 
@@ -107,6 +153,7 @@ public class BunnyBoss : MonoBehaviour
                 if (CurrentHP <= MaxHP / 2)
                 {
                     IsSpawnPhase = true;
+                    CanSpawn = true;
                 }
 
                 if (CurrentHP <= 0)

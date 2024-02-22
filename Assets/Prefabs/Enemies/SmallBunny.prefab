@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 6612670367809766842}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_Sprite: {fileID: 21300000, guid: 5cf8e3356085ef8498e5488f4e6d55fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
-  m_FlipY: 0
+  m_FlipY: 1
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Life: 2
   Size: 2
+  IgnoreSize: 0
   growRate: 0.1
 --- !u!61 &6612670367809766838
 BoxCollider2D:
@@ -119,18 +120,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.021210074, y: -0.021210194}
+  m_Offset: {x: -0.021210074, y: 0.041194916}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.2, y: 3.2}
+    oldSize: {x: 1.6, y: 1.6}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1333778, y: 1.133379}
+  m_Size: {x: 1.1333778, y: 0.9645157}
   m_EdgeRadius: 0
 --- !u!50 &6612670367809766837
 Rigidbody2D:
@@ -173,7 +174,7 @@ MonoBehaviour:
   - {fileID: 6612670367809766842}
   PatrolRandomize: 0
   PatrolWaitDuration: 2
-  ChaseWaitDuration: 0
+  ChaseWaitDuration: 1
 --- !u!195 &6612670367809766835
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -183,7 +184,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 6612670367809766842}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.1
+  m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
