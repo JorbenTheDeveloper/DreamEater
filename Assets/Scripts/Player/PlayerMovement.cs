@@ -8,6 +8,7 @@ using Cinemachine;
 using UnityEngine.AI;
 using System.Drawing;
 using static Unity.Burst.Intrinsics.X86;
+using UnityEngine.VFX;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -51,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
     NavMeshAgent agent;
 
+
     public float Size => transform.localScale.x;
 
     private void Start()
@@ -85,6 +87,9 @@ public class PlayerMovement : MonoBehaviour
 
         agent.speed = currentSpeed;
         HandleMovementAndRotation();
+
+        
+
     }
 
     void HandleMovementAndRotation()

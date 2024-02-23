@@ -27,7 +27,7 @@ TagManager:
   - UI
   - HoldableObject
   - Mud
-  - 
+  - Fog
   - 
   - 
   - 
@@ -54,4 +54,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Fog
+    uniqueID: 255959349
     locked: 0
