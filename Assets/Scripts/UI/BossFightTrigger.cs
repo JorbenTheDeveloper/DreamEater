@@ -14,6 +14,7 @@ public class BossFightTrigger : MonoBehaviour
 
     private PlayerMovement playerMovement; // Reference to the player's movement script
     private bool hasBeenTriggered = false; // Flag to check if the trigger has already been activated
+    private Animator playerAnimator;
 
     private void Start()
     {
@@ -24,8 +25,10 @@ public class BossFightTrigger : MonoBehaviour
         if (player != null)
         {
             playerMovement = player.GetComponent<PlayerMovement>();
+            playerAnimator = player.GetComponent<Animator>(); // Get the Animator component
         }
 
+        // Optionally, ensure the timeline doesn't play automatically if that's not desired
         if (timeline != null)
         {
             timeline.playOnAwake = false;
@@ -35,30 +38,27 @@ public class BossFightTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Exit if the trigger has already been activated
         if (hasBeenTriggered || !other.CompareTag("Player")) return;
 
-        hasBeenTriggered = true; // Set the flag to true to prevent reactivation
+        hasBeenTriggered = true;
 
         targetTilemap.gameObject.SetActive(true);
         boss.SetActive(true);
         bossHPBar.SetActive(true);
 
-        // Disable player controls
         if (playerMovement != null)
         {
             playerMovement.StopMovement(); // Disable movement immediately
+            if (playerAnimator != null) playerAnimator.enabled = false; // Disable animations
         }
 
-        // Play the Timeline
         if (timeline != null)
         {
             timeline.Play();
         }
         else
         {
-            // If there's no timeline, re-enable movement immediately (or after a delay if preferred)
-            Invoke(nameof(ReEnablePlayerMovement), 1f); // 1 second delay as an example
+            ReEnablePlayerMovement(); // Re-enable movement and animations immediately if there's no timeline
         }
     }
 
@@ -74,6 +74,7 @@ public class BossFightTrigger : MonoBehaviour
         {
             playerMovement.EnableMovement();
         }
+        if (playerAnimator != null) playerAnimator.enabled = true;
     }
 
     private void OnDestroy()

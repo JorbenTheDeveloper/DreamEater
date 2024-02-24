@@ -77,12 +77,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (!inputEnabled) return; // Halt update processing if input is disabled
+        if (!inputEnabled) return;
 
         speed = GetSpeedBySize();
-
         UpdateRushing();
         HandleParticleEffectSpawn();
+
+        // Determine the current speed for animation
+        float animationSpeed = agent.velocity.magnitude / speed;
+        animator.SetFloat("Speed", animationSpeed); // Assuming you have a "Speed" float parameter
+
         if (isInMud)
         {
             currentSpeed = mudSpeed;
@@ -93,6 +97,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         HandleMovementAndRotation();
+
+        // Update Animator states
+        animator.SetBool("IsWalking", animationSpeed > 0.1f); // Adjust threshold as needed
+        animator.SetBool("IsRunning", isRushing && animationSpeed > 0.1f);
     }
 
     void HandleMovementAndRotation()
