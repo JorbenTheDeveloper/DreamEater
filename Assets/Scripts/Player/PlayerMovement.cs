@@ -50,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isInMud = false;
     public float mudSpeed = 5f;
 
+    [Header("Input Control")]
+    public bool inputEnabled = true;
+
     NavMeshAgent agent;
 
 
@@ -74,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!inputEnabled) return; // Halt update processing if input is disabled
+
         speed = GetSpeedBySize();
 
         UpdateRushing();
@@ -82,28 +87,26 @@ public class PlayerMovement : MonoBehaviour
         {
             currentSpeed = mudSpeed;
         }
+        else
+        {
+            agent.speed = currentSpeed;
+        }
 
-         
-
-        agent.speed = currentSpeed;
         HandleMovementAndRotation();
-
-        
-
     }
 
     void HandleMovementAndRotation()
     {
+        if (!inputEnabled)
+        {
+            return; // If input is disabled, do not process movement or rotation.
+        }
+
         Vector2 targetPosition = GetWorldPositionFromMouse();
-        if (!IsMouseOverPlayer())
+
+        if (!IsMouseOverPlayer()) // Only move if the mouse is not over the player to avoid jittering.
         {
             MoveAndRotate(targetPosition);
-            animator.SetBool("IsWalking", true);
-        }
-        else
-        {
-            animator.SetBool("IsWalking", false);
-            animator.SetBool("IsRunning", false);
         }
     }
 
@@ -160,6 +163,8 @@ public class PlayerMovement : MonoBehaviour
         {
             agent.SetDestination(targetPosition);
         }
+
+
     }
 
     Vector2 GetWorldPositionFromMouse()
@@ -213,5 +218,26 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = speed;
         }
     }
+
+    public void StopMovement()
+    {
+        inputEnabled = false; // Disable input handling.
+                              // If using a NavMeshAgent, consider stopping its current movement.
+        if (agent != null)
+        {
+            agent.isStopped = true;
+        }
+    }
+
+    public void EnableMovement()
+    {
+        inputEnabled = true; // Re-enable input handling.
+
+        if (agent != null)
+        {
+            agent.isStopped = false; // Make sure the NavMeshAgent can move again.
+        }
+    }
+
 
 }
