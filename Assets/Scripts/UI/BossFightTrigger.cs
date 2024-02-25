@@ -11,6 +11,7 @@ public class BossFightTrigger : MonoBehaviour
     public GameObject bossHPBar;
     public PlayableDirector timeline; // Reference to the Timeline's PlayableDirector
     public GameObject player; // Reference to the player GameObject
+    public BunnyBoss BunnyBoss;
 
     private PlayerMovement playerMovement; // Reference to the player's movement script
     private bool hasBeenTriggered = false; // Flag to check if the trigger has already been activated
@@ -18,7 +19,7 @@ public class BossFightTrigger : MonoBehaviour
 
     private void Start()
     {
-        boss.SetActive(false);
+        //boss.SetActive(false);
         bossHPBar.SetActive(false);
 
         // Get the PlayerMovement component from the player GameObject
@@ -58,12 +59,14 @@ public class BossFightTrigger : MonoBehaviour
         }
         else
         {
+            BunnyBoss.StartAttack();
             ReEnablePlayerMovement(); // Re-enable movement and animations immediately if there's no timeline
         }
     }
 
     private void OnTimelineStopped(PlayableDirector obj)
     {
+        BunnyBoss.StartAttack();
         ReEnablePlayerMovement();
     }
 

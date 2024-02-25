@@ -4,6 +4,7 @@ using System.Data.Common;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
 public class BunnyBoss : MonoBehaviour
 {
@@ -33,11 +34,12 @@ public class BunnyBoss : MonoBehaviour
     public float DamagebleTimer = 0;
 
     [Header("Spawning")]
+    public GameObject RetreatObj;
     public int[] EnemyCountForRound;
     public GameObject SmallBunnyPrefab;
     public GameObject[] SpawnPositions;
     private List<GameObject> SpawnedObjects;
-    private int currentSpawnRound = 0;
+    private int currentSpawnRound = -1;
     private bool IsSpawnPhase = false;
     private bool CanSpawn = false;
 
@@ -61,11 +63,10 @@ public class BunnyBoss : MonoBehaviour
 
         IsSpawnPhase = true;
         CanSpawn = true;
-
         Invoke(nameof(StartAttack), 2);
     }
 
-    void StartAttack()
+    public void StartAttack()
     {
         StartAttacking = true;
     }
@@ -76,29 +77,37 @@ public class BunnyBoss : MonoBehaviour
         if (!StartAttacking) return;
         DamagebleTimer += Time.deltaTime;
 
+        if (!IsVulnerable && !IsSpawnPhase) LookAtPlayer();
+
         if (IsSpawnPhase)
         {
             if (CanSpawn)
             {
+                currentSpawnRound++;
                 CanSpawn = false;
-                StartSpawing();
+                StartCoroutine(StartSpawning());
             }
             else
             {
-/*                bool allDead = true;
-                SpawnedObjects.ForEach((item) => {
-                    if (item.activeInHierarchy)
-                    {
-                        allDead = false;
-                    }
-                });
-
-                if (allDead)
+                if (SpawnedObjects != null)
                 {
-                    SpawnedObjects.Clear();
-                    CanSpawn = true;
-                    currentSpawnRound++;
-                }*/
+                    bool allDead = true;
+                    for (int i = 0; i < SpawnedObjects.Count; i++)
+                    {
+                        if (SpawnedObjects[i] != null)
+                        {
+                            allDead = false;
+                            break;
+                        }
+                    }
+
+                    if (allDead)
+                    {
+                        SpawnedObjects.Clear();
+                        SpawnedObjects = null;
+                        CanSpawn = true;
+                    }
+                }
             }
         }
         else if (CanHop)
@@ -109,23 +118,34 @@ public class BunnyBoss : MonoBehaviour
         }
     }
 
-    void StartSpawing()
+    IEnumerator StartSpawning()
     {
-        if (currentSpawnRound >= EnemyCountForRound.Length) return;
+        if (currentSpawnRound == 0) StartCoroutine(HopToRetreat());
 
+        yield return new WaitForSeconds(3);
 
-        SpawnedObjects = new List<GameObject>();
-        int objectCountToSpawn = EnemyCountForRound[currentSpawnRound];
-        int spawnPosIndex = 0;
-        for (int i = 0; i < objectCountToSpawn; i++)
+        // TODO: this phase is done, move to next phase
+        if (currentSpawnRound >= EnemyCountForRound.Length)
         {
-            var spawnPos = SpawnPositions[spawnPosIndex].transform.position;
-            var bunny = Instantiate(SmallBunnyPrefab, spawnPos, SmallBunnyPrefab.transform.rotation);
-            SpawnedObjects.Add(bunny);
+            IsSpawnPhase = false;
+            CanSpawn = false;
+            CanHop = true;
+        }
+        else
+        {
+            SpawnedObjects = new List<GameObject>();
+            int objectCountToSpawn = EnemyCountForRound[currentSpawnRound];
+            int spawnPosIndex = 0;
+            for (int i = 0; i < objectCountToSpawn; i++)
+            {
+                var spawnPos = SpawnPositions[spawnPosIndex].transform.position;
+                var bunny = Instantiate(SmallBunnyPrefab, spawnPos, SmallBunnyPrefab.transform.rotation);
+                SpawnedObjects.Add(bunny);
 
-            spawnPosIndex++;
-            if (spawnPosIndex >= SpawnPositions.Length)
-                spawnPosIndex = 0;
+                spawnPosIndex++;
+                if (spawnPosIndex >= SpawnPositions.Length)
+                    spawnPosIndex = 0;
+            }
         }
     }
 
@@ -181,6 +201,7 @@ public class BunnyBoss : MonoBehaviour
         animator.SetBool("Hop", false);
         animator.SetBool("Fall", true);
 
+        LookAtPlayer();
         yield return new WaitForSeconds(0.4f);
 
         animator.SetBool("Fall", false);
@@ -206,6 +227,34 @@ public class BunnyBoss : MonoBehaviour
         }
 
         CanHop = true;
+    }
+
+    IEnumerator HopToRetreat()
+    {
+        animator.SetBool("Hop", true);
+        yield return new WaitForSeconds(1);
+
+        // show UI 
+        FallingShadow.gameObject.SetActive(true);
+        FallingShadow.StartFilling(FallingTime, RetreatObj.transform.position);
+
+        yield return new WaitForSeconds(1);
+
+        transform.position = RetreatObj.transform.position;
+        animator.SetBool("Hop", false);
+        animator.SetBool("Fall", true);
+
+        transform.rotation = RetreatObj.transform.rotation;
+        yield return new WaitForSeconds(0.4f);
+
+        animator.SetBool("Fall", false);
+        SpawnParticleEffect();
+        FallingShadow.gameObject.SetActive(false);
+    }
+
+    void LookAtPlayer()
+    {
+        transform.rotation = Quaternion.LookRotation(Vector3.forward, transform.position - Player.Instance.transform.position);
     }
 
     void SpawnParticleEffect()
