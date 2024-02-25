@@ -91,11 +91,8 @@ public class PlayerMovement : MonoBehaviour
         {
             currentSpeed = mudSpeed;
         }
-        else
-        {
-            agent.speed = currentSpeed;
-        }
 
+        agent.speed = currentSpeed;
         HandleMovementAndRotation();
 
         // Update Animator states
@@ -209,21 +206,17 @@ public class PlayerMovement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        
         if (other.gameObject.layer == LayerMask.NameToLayer("Mud"))
         {
             isInMud = true;
-            currentSpeed = mudSpeed;
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        
         if (other.gameObject.layer == LayerMask.NameToLayer("Mud"))
         {
             isInMud = false;
-            currentSpeed = speed;
         }
     }
 
