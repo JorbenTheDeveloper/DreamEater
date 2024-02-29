@@ -15,7 +15,7 @@ public class BunnyBoss : MonoBehaviour
 
     public bool StartAttacking = false;
 
-    public float HopCoolDown = 5f;
+    public float HopCoolDown = 5f; 
     private bool CanHop = true;
     public float FallingTime = 2;
     public float FallIndicatorTime = 1;
@@ -42,6 +42,7 @@ public class BunnyBoss : MonoBehaviour
     private int currentSpawnRound = -1;
     private bool IsSpawnPhase = false;
     private bool CanSpawn = false;
+    private bool hasBeenInSpawningPhase = false;
 
     private bool IsVulnerable => HopCount >= MaxHopBeforeVulnerable;
 
@@ -61,9 +62,10 @@ public class BunnyBoss : MonoBehaviour
         DamagebleTimer = DamagebleCoolDown;
         CurrentHP = MaxHP;
 
-        IsSpawnPhase = true;
+        /*IsSpawnPhase = true;
         CanSpawn = true;
-        Invoke(nameof(StartAttack), 2);
+        CanHop = false;
+        Invoke(nameof(StartAttack), 2);*/
     }
 
     public void StartAttack()
@@ -89,7 +91,7 @@ public class BunnyBoss : MonoBehaviour
             }
             else
             {
-                if (SpawnedObjects != null)
+                if (SpawnedObjects != null && SpawnedObjects.Count != 0)
                 {
                     bool allDead = true;
                     for (int i = 0; i < SpawnedObjects.Count; i++)
@@ -120,6 +122,7 @@ public class BunnyBoss : MonoBehaviour
 
     IEnumerator StartSpawning()
     {
+        hasBeenInSpawningPhase = true;
         if (currentSpawnRound == 0) StartCoroutine(HopToRetreat());
 
         yield return new WaitForSeconds(3);
@@ -170,12 +173,6 @@ public class BunnyBoss : MonoBehaviour
                 DamagebleTimer = 0;
                 CurrentHP -= 5;
 
-                if (CurrentHP <= MaxHP / 2)
-                {
-                    IsSpawnPhase = true;
-                    CanSpawn = true;
-                }
-
                 if (CurrentHP <= 0)
                 {
                     SceneManager.LoadScene("Win");
@@ -220,6 +217,21 @@ public class BunnyBoss : MonoBehaviour
 
             HopCount = 0;
             spriteRenderer.color = originalColor;
+
+            if (!hasBeenInSpawningPhase && CurrentHP <= MaxHP / 2)
+            {
+                IsSpawnPhase = true;
+                CanSpawn = true;
+
+                // half all the cooldowns
+                HopCoolDown /= 2;
+                FallingTime /= 2;
+                FallIndicatorTime /= 2;
+                HopCoolDownWhenVulnerable /= 2;
+                MaxHopBeforeVulnerable += 1;
+
+                yield break;
+            }
         }
         else
         {

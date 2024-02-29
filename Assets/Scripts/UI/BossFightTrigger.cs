@@ -19,7 +19,7 @@ public class BossFightTrigger : MonoBehaviour
 
     private void Start()
     {
-        //boss.SetActive(false);
+        boss.SetActive(false);
         bossHPBar.SetActive(false);
 
         // Get the PlayerMovement component from the player GameObject
