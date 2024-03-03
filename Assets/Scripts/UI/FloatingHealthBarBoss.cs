@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class FloatingHealthBarBoss : MonoBehaviour
 {
     public BunnyBoss boss;
-    private Slider slider;
+    private Image slider;
 
     // Start is called before the first frame update
     void Start()
     {
-        slider = GetComponent<Slider>();
+        slider = GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -22,6 +22,6 @@ public class FloatingHealthBarBoss : MonoBehaviour
 
     void UpdateHealthBar(float currentValue, float maxValue)
     {
-        slider.value = currentValue / maxValue;
+        slider.fillAmount = currentValue / maxValue;
     }
 }
