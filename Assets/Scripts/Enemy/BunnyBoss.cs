@@ -4,7 +4,6 @@ using System.Data.Common;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Progress;
 
 public class BunnyBoss : MonoBehaviour
 {

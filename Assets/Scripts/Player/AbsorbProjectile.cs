@@ -7,11 +7,14 @@ public class AbsorbProjectile : MonoBehaviour
 {
     private Eatable projectileEatable;
     private bool canAttack;
+    public TrailRenderer TrailRenderer;
 
     private void Start()
     {
         projectileEatable = GetComponent<Eatable>();
         canAttack = true;
+
+        TrailRenderer.startWidth = transform.localScale.x;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
