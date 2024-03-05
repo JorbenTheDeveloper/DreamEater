@@ -106,7 +106,7 @@ MonoBehaviour:
   Life: 2
   Size: 2
   IgnoreSize: 0
-  growRate: 0.1
+  growRate: 0.05
 --- !u!61 &6612670367809766838
 BoxCollider2D:
   m_ObjectHideFlags: 0
