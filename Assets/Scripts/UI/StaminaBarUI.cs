@@ -10,6 +10,11 @@ public class StaminaBarUI : MonoBehaviour
     public Image StaminaBar;
     public TextMeshProUGUI exhaustedDurationText;
 
+    private float exhaustedDuration;
+    private void Start()
+    {
+        exhaustedDuration = playerMovement.GetExhaustedDuration();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -18,7 +23,7 @@ public class StaminaBarUI : MonoBehaviour
         if (playerMovement.HasExhausted())
         {
             float exhaustedTimer = playerMovement.GetExhaustedTimer();
-            exhaustedDurationText.text = $"{exhaustedTimer:F1}/3";
+            exhaustedDurationText.text = $"{exhaustedTimer:F1}/{exhaustedDuration}";
         }
         else
         {

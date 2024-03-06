@@ -8,7 +8,7 @@ using System.Linq;
 public class Chaser : MonoBehaviour
 {
     private Player player => Player.Instance;
-    public Eatable eatable;
+    private Eatable eatable;
 
     public float ChaseRange = 20f;
     public float Speed = 3f;
@@ -34,6 +34,7 @@ public class Chaser : MonoBehaviour
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         animator = GetComponent<Animator>();
+        eatable = GetComponent<Eatable>();
     }
 
     private void Start()
@@ -54,7 +55,7 @@ public class Chaser : MonoBehaviour
             agent.isStopped = true;
             animator.SetBool("IsWalking", false);
 
-            if (AlwaysChase || Size >= player.Size)
+            if (ShouldChase())
             {
                 chaseWaitSecondPassed += Time.deltaTime;
                 
@@ -115,6 +116,8 @@ public class Chaser : MonoBehaviour
             }
         }
     }
+
+    private bool ShouldChase() => AlwaysChase || player.IsVulnerable || Size >= player.Size;
 
     private void TurnToDirection()
     {

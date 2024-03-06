@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     public float CurrentHP => currentHP;
     public CinemachineVirtualCamera cinemachineCamera;
 
+    public bool IsVulnerable => playerMovement.HasExhausted();
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

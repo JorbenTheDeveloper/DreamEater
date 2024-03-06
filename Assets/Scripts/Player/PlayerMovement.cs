@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     public float exhaustedDuration = 3f;
     private float exhaustedTimer = 0;
     public float GetExhaustedTimer() => exhaustedTimer;
+    public float GetExhaustedDuration() => exhaustedDuration;
     public bool HasExhausted() => hasExhausted;
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
