@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
+using UnityEngine.Rendering.Universal;
 
 public class Chaser : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class Chaser : MonoBehaviour
     public float ChaseWaitDuration = 0f;
     private float chaseWaitSecondPassed = 0f;
 
+    private Light2D light2D;
     private NavMeshAgent agent;
     private Animator animator;
     private void Awake()
@@ -35,6 +37,7 @@ public class Chaser : MonoBehaviour
         agent.updateUpAxis = false;
         animator = GetComponent<Animator>();
         eatable = GetComponent<Eatable>();
+        light2D = GetComponent<Light2D>();
     }
 
     private void Start()
@@ -57,6 +60,7 @@ public class Chaser : MonoBehaviour
 
             if (ShouldChase())
             {
+                light2D.enabled = true;
                 chaseWaitSecondPassed += Time.deltaTime;
                 
                 if (chaseWaitSecondPassed >= ChaseWaitDuration)
@@ -69,6 +73,7 @@ public class Chaser : MonoBehaviour
             }
             else
             {
+                light2D.enabled = false;
                 var oppositeDir = (transform.position - player.transform.position).normalized;
                 agent.isStopped = false;
                 animator.SetBool("IsWalking", true);
@@ -78,6 +83,8 @@ public class Chaser : MonoBehaviour
         }
         else
         {
+            light2D.enabled = false;
+
             // Only add an early return if PatrollingPositions is empty
             if (PatrollingPositions.Count == 0)
             {
