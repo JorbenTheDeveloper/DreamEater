@@ -210,12 +210,11 @@ public class BunnyBoss : MonoBehaviour
 
         if (IsVulnerable)
         {
-            spriteRenderer.color = vulnerableColor;
+            animator.SetBool("Dazed", true);
 
             yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
-
+            animator.SetBool("Dazed", false);
             HopCount = 0;
-            spriteRenderer.color = originalColor;
 
             if (!hasBeenInSpawningPhase && CurrentHP <= MaxHP / 2)
             {

@@ -23,11 +23,19 @@ public class Player : MonoBehaviour
 
     public float CurrentHP => currentHP;
     public CinemachineVirtualCamera cinemachineCamera;
+    public CinemachineCameraShake CinemachineCameraShake;
+    public UnityEngine.Color DamagedColor = UnityEngine.Color.red;
 
     public bool IsVulnerable => playerMovement.HasExhausted();
 
+    private UnityEngine.Color originalColor;
+
+    SpriteRenderer spriteRenderer;
     private void Awake()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+
         if (Instance != null && Instance != this)
             Destroy(gameObject);
         else
@@ -51,6 +59,9 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damageValue)
     {
+        CinemachineCameraShake.Shake();
+        spriteRenderer.color = DamagedColor;
+        Invoke(nameof(OriginalColor), 0.2f);
         currentHP -= damageValue;
         currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
 
@@ -58,6 +69,11 @@ public class Player : MonoBehaviour
         {
             SceneManager.LoadScene("Retry");
         }
+    }
+
+    void OriginalColor()
+    {
+        spriteRenderer.color = originalColor;
     }
 
     public void TryEat(Eatable eatable)
