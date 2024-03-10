@@ -22,6 +22,7 @@ public class PlayerShoot : MonoBehaviour
     public TextMeshProUGUI shootIntervalText;
 
     public float sizeReduction = 0.1f;
+    public static bool canShootDuringBossFight = true;
 
     void Update()
     {
@@ -41,7 +42,7 @@ public class PlayerShoot : MonoBehaviour
         }
 
         // Check for shooting input within the Update method
-        if (Input.GetKeyDown(KeyCode.Space) && canShoot && Player.Instance.Size > 0.5f)
+        if (Input.GetKeyDown(KeyCode.Space) && canShoot && Player.Instance.Size > 0.5f && canShootDuringBossFight)
         {
             ShootProjectile(Player.Instance.Size, transform);
         }

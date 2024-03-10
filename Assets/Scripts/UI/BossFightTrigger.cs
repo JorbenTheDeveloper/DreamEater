@@ -12,10 +12,13 @@ public class BossFightTrigger : MonoBehaviour
     public PlayableDirector timeline; // Reference to the Timeline's PlayableDirector
     public GameObject player; // Reference to the player GameObject
     public BunnyBoss BunnyBoss;
+    public TMPro.TextMeshProUGUI bossFightText;
 
     private PlayerMovement playerMovement; // Reference to the player's movement script
     private bool hasBeenTriggered = false; // Flag to check if the trigger has already been activated
     private Animator playerAnimator;
+
+    private bool isTimelinePlaying = false;
 
     private void Start()
     {
@@ -37,15 +40,36 @@ public class BossFightTrigger : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        // Check if the timeline is playing and any key is pressed
+        if (isTimelinePlaying && Input.anyKeyDown)
+        {
+            timeline.time = timeline.duration;
+            timeline.Evaluate(); //Forces the timeline to update to the new time immediately
+            timeline.Stop();
+
+            isTimelinePlaying = false;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (hasBeenTriggered || !other.CompareTag("Player")) return;
 
         hasBeenTriggered = true;
+        PlayerShoot.canShootDuringBossFight = false;
 
         targetTilemap.gameObject.SetActive(true);
         boss.SetActive(true);
         bossHPBar.SetActive(true);
+
+        
+        if (bossFightText != null)
+        {
+            bossFightText.gameObject.SetActive(true);
+            bossFightText.text = "Press any key to skip the cutscene";
+        }
 
         if (playerMovement != null)
         {
@@ -55,6 +79,7 @@ public class BossFightTrigger : MonoBehaviour
 
         if (timeline != null)
         {
+            isTimelinePlaying = true;
             timeline.Play();
         }
         else
@@ -66,8 +91,16 @@ public class BossFightTrigger : MonoBehaviour
 
     private void OnTimelineStopped(PlayableDirector obj)
     {
+        isTimelinePlaying = false;
+        PlayerShoot.canShootDuringBossFight = true;
         BunnyBoss.StartAttack();
         ReEnablePlayerMovement();
+
+        // Disable the TMP text here
+        if (bossFightText != null)
+        {
+            bossFightText.gameObject.SetActive(false);
+        }
     }
 
     // Utility method to re-enable player movement
@@ -84,6 +117,7 @@ public class BossFightTrigger : MonoBehaviour
     {
         if (timeline != null)
         {
+            
             timeline.stopped -= OnTimelineStopped;
         }
     }
