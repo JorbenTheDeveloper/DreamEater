@@ -22,6 +22,9 @@ public class BunnyBoss : MonoBehaviour
     public FallingShadow FallingShadow;
     public GameObject DustParticlePrefab;
 
+    public Sprite Injured1;
+    public Sprite Injured2;
+    public Sprite Injured3;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
@@ -117,6 +120,23 @@ public class BunnyBoss : MonoBehaviour
             CanHop = false;
             StartCoroutine(Hop());
         }
+
+        if (CurrentHP >= 75)
+        {
+            spriteRenderer.sprite = spriteRenderer.sprite;
+        }
+        else if (CurrentHP >= 50 && CurrentHP < 75)
+        {
+            spriteRenderer.sprite = Injured1;
+        }
+        else if (CurrentHP >= 25 && CurrentHP < 50)
+        {
+            spriteRenderer.sprite = Injured2;
+        }
+        else if (CurrentHP > 0 && CurrentHP < 25)
+        {
+            spriteRenderer.sprite = Injured3;
+        }
     }
 
     IEnumerator StartSpawning()
@@ -210,11 +230,46 @@ public class BunnyBoss : MonoBehaviour
 
         if (IsVulnerable)
         {
-            animator.SetBool("Dazed", true);
+            if (CurrentHP >= 75)
+            {
+                animator.SetBool("Dazed", true);
 
-            yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
-            animator.SetBool("Dazed", false);
-            HopCount = 0;
+                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
+                animator.SetBool("Dazed", false);
+                HopCount = 0;
+
+            }
+
+            if (CurrentHP >= 50 && CurrentHP < 75)
+            {
+                animator.SetBool("DazedInjured1", true);
+
+                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
+                animator.SetBool("DazedInjured1", false);
+                HopCount = 0;
+
+            }
+
+            if (CurrentHP >= 25 && CurrentHP < 50)
+            {
+                animator.SetBool("DazedInjured2", true);
+
+                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
+                animator.SetBool("DazedInjured2", false);
+                HopCount = 0;
+
+            }
+
+            if (CurrentHP >= 0 && CurrentHP < 25)
+            {
+                animator.SetBool("DazedInjured3", true);
+
+                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
+                animator.SetBool("DazedInjured3", false);
+                HopCount = 0;
+
+            }
+
 
             if (!hasBeenInSpawningPhase && CurrentHP <= MaxHP / 2)
             {
@@ -241,6 +296,7 @@ public class BunnyBoss : MonoBehaviour
 
     IEnumerator HopToRetreat()
     {
+
         animator.SetBool("Hop", true);
         yield return new WaitForSeconds(1);
 
