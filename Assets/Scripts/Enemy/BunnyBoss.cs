@@ -47,6 +47,7 @@ public class BunnyBoss : MonoBehaviour
     private bool hasBeenInSpawningPhase = false;
 
     private bool IsVulnerable => HopCount >= MaxHopBeforeVulnerable;
+    private bool isDazed = false;
 
     // for testing
     private Color originalColor;
@@ -56,6 +57,7 @@ public class BunnyBoss : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        
     }
 
     private void Start()
@@ -120,20 +122,25 @@ public class BunnyBoss : MonoBehaviour
             CanHop = false;
             StartCoroutine(Hop());
         }
+    }
+
+    private void LateUpdate()
+    {
+        if (isDazed) return;
 
         if (CurrentHP >= 75)
         {
-            spriteRenderer.sprite = spriteRenderer.sprite;
+            //spriteRenderer.sprite = spriteRenderer.sprite;
         }
-        else if (CurrentHP >= 50 && CurrentHP < 75)
+        else if (CurrentHP >= 50)
         {
             spriteRenderer.sprite = Injured1;
         }
-        else if (CurrentHP >= 25 && CurrentHP < 50)
+        else if (CurrentHP >= 25)
         {
             spriteRenderer.sprite = Injured2;
         }
-        else if (CurrentHP > 0 && CurrentHP < 25)
+        else if (CurrentHP > 0)
         {
             spriteRenderer.sprite = Injured3;
         }
@@ -230,45 +237,18 @@ public class BunnyBoss : MonoBehaviour
 
         if (IsVulnerable)
         {
-            if (CurrentHP >= 75)
-            {
-                animator.SetBool("Dazed", true);
+            string dazedAnimName = "DazedInjured3";
+            if (CurrentHP >= 75) dazedAnimName = "Dazed";
+            else  if (CurrentHP >= 50) dazedAnimName = "DazedInjured1";
+            else if(CurrentHP >= 25) dazedAnimName = "DazedInjured2";
 
-                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
-                animator.SetBool("Dazed", false);
-                HopCount = 0;
+            isDazed = true;
+            animator.SetBool(dazedAnimName, true);
 
-            }
-
-            if (CurrentHP >= 50 && CurrentHP < 75)
-            {
-                animator.SetBool("DazedInjured1", true);
-
-                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
-                animator.SetBool("DazedInjured1", false);
-                HopCount = 0;
-
-            }
-
-            if (CurrentHP >= 25 && CurrentHP < 50)
-            {
-                animator.SetBool("DazedInjured2", true);
-
-                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
-                animator.SetBool("DazedInjured2", false);
-                HopCount = 0;
-
-            }
-
-            if (CurrentHP >= 0 && CurrentHP < 25)
-            {
-                animator.SetBool("DazedInjured3", true);
-
-                yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
-                animator.SetBool("DazedInjured3", false);
-                HopCount = 0;
-
-            }
+            yield return new WaitForSeconds(HopCoolDownWhenVulnerable);
+            animator.SetBool(dazedAnimName, false);
+            HopCount = 0;
+            isDazed = false;
 
 
             if (!hasBeenInSpawningPhase && CurrentHP <= MaxHP / 2)
