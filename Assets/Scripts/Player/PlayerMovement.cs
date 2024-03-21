@@ -183,7 +183,7 @@ public class PlayerMovement : MonoBehaviour
     bool IsMouseOverPlayer()
     {
         Vector2 mousePosition = GetWorldPositionFromMouse();
-        return Vector2.Distance(mousePosition, transform.position) < 1.0f;
+        return Vector2.Distance(mousePosition, transform.position) < 0.5f;
     }
 
     void HandleParticleEffectSpawn()

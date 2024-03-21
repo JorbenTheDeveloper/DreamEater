@@ -5,6 +5,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI;
+    public GameObject controlMenuUI;
 
     // Update is called once per frame
     void Update()
@@ -43,5 +44,18 @@ public class PauseMenu : MonoBehaviour
         #else
         Application.Quit(); // Quit the game
         #endif
+    }
+
+    public void ControlPanel()
+    {
+        pauseMenuUI.SetActive(false);
+        controlMenuUI.SetActive(true);
+
+    }
+
+    public void ReturnControlPanel()
+    {
+        controlMenuUI.SetActive(false);
+        pauseMenuUI.SetActive(true);
     }
 }
