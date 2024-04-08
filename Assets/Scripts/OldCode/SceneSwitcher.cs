@@ -12,6 +12,6 @@ public class SceneSwitcher : MonoBehaviour
     }
     public void LoadLevelOne()
     {
-        SceneManager.LoadScene("LevelOne");
+        SceneManager.LoadScene("IntroCutscene");
     }
 }
