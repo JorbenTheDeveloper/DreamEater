@@ -26,6 +26,9 @@ public class Player : MonoBehaviour
     public CinemachineCameraShake CinemachineCameraShake;
     public UnityEngine.Color DamagedColor = UnityEngine.Color.red;
 
+    public ParticleSystem growthParticles;
+    public float particleSystemScale = 1f;
+
     public bool IsVulnerable => playerMovement.HasExhausted();
 
     private UnityEngine.Color originalColor;
@@ -50,6 +53,7 @@ public class Player : MonoBehaviour
         transform.localScale = new Vector3(StartingSize, StartingSize, 1);
 
         StartCoroutine(AdjustCameraSize(1));
+        
     }
 
     private void Update()
@@ -87,6 +91,7 @@ public class Player : MonoBehaviour
             if (IsMaxGrow() == false)
             {
                 Grow(eatable.growRate);
+
             }
         }
     }
@@ -107,13 +112,49 @@ public class Player : MonoBehaviour
     }
     private void Grow(float value)
     {
-        // Calculate the new size and ensure it doesn't exceed maxGrow.
-        float newSizeX = Mathf.Min(transform.localScale.x + value, maxGrow);
-        float newSizeY = Mathf.Min(transform.localScale.y + value, maxGrow);
+        if (!IsMaxGrow())
+        {
+            float previousSize = Size;
+            float newSize = Mathf.Min(Size + value, maxGrow);
 
-        // Apply the new size.
-        transform.localScale = new Vector3(newSizeX, newSizeY, 1);
-        StartCoroutine(AdjustCameraSize(1));
+            // Apply the new size to the player.
+            transform.localScale = new Vector3(newSize, newSize, 1);
+            StartCoroutine(AdjustCameraSize(1)); // Adjust the camera size if needed.
+
+            // Calculate how much the player has grown and update the particle scale.
+            float growthIncrement = newSize - previousSize;
+            UpdateParticleSystemScale(growthIncrement);
+
+            StartGrowthParticles(); // Ensure particles are playing.
+        }
+    }
+
+    private void UpdateParticleSystemScale(float growthIncrement)
+    {
+        // Check if the growth is at least 0.1
+        if (growthIncrement >= 0.1f)
+        {
+            int increments = Mathf.FloorToInt(growthIncrement / 0.1f);
+            particleSystemScale += increments; // Add 1 to the scale for each 0.1 increment.
+            growthParticles.transform.localScale = new Vector3(particleSystemScale, particleSystemScale, particleSystemScale);
+        }
+    }
+
+    private void StartGrowthParticles()
+    {
+        if (growthParticles != null)
+        {
+            growthParticles.Play(); // Start playing the particle effect
+            Invoke("StopGrowthParticles", 3f); // Schedule the stopping of the particle system after 3 seconds
+        }
+    }
+
+    private void StopGrowthParticles()
+    {
+        if (growthParticles != null)
+        {
+            growthParticles.Stop(); 
+        }
     }
 
     IEnumerator AdjustCameraSize(float totalTime)
