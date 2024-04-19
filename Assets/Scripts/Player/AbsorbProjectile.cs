@@ -23,19 +23,24 @@ public class AbsorbProjectile : MonoBehaviour
         {
             if (!canAttack) return;
 
-            Eatable enemy = collision.gameObject.GetComponent<Eatable>();
-            if (enemy == null) return;
-
-            if (projectileEatable.Size >= enemy.Size)
+            if (collision.gameObject.TryGetComponent(out Eatable enemy))
             {
-                // Increase the projectile's own size
-                float sizeIncrease = enemy.growRate;
-                transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
+                if (projectileEatable.Size >= enemy.Size)
+                {
+                    // Increase the projectile's own size
+                    float sizeIncrease = enemy.growRate;
+                    transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
 
-                // Accumulate growth rate to transfer to the player
-                projectileEatable.growRate += enemy.growRate;
+                    // Accumulate growth rate to transfer to the player
+                    projectileEatable.growRate += enemy.growRate;
 
-                enemy.TakeDamage();
+                    enemy.TakeDamage();
+                }
+            }
+
+            if (collision.gameObject.TryGetComponent(out BunnyBoss boss))
+            {
+                boss.TakeDamage(true);
             }
         }
     }

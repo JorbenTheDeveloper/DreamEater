@@ -35,6 +35,7 @@ public class BunnyBoss : MonoBehaviour
     public float DamagebleCoolDown = 2;
     public float DamagebleTimer = 0;
     public int TakeDamageAmount = 5;
+    public int TakeDamageAmountFromProjectile = 10;
 
     [Header("Spawning")]
     public GameObject RetreatObj;
@@ -128,6 +129,7 @@ public class BunnyBoss : MonoBehaviour
     private void LateUpdate()
     {
         if (isDazed) return;
+        
 
         if (CurrentHP >= 75)
         {
@@ -195,15 +197,20 @@ public class BunnyBoss : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (IsVulnerable && DamagebleTimer >= DamagebleCoolDown)
-            {
-                DamagebleTimer = 0;
-                CurrentHP -= TakeDamageAmount;
+            TakeDamage(false);
+        }
+    }
 
-                if (CurrentHP <= 0)
-                {
-                    SceneManager.LoadScene("Win");
-                }
+    public void TakeDamage(bool isProjectile)
+    {
+        if (IsVulnerable && DamagebleTimer >= DamagebleCoolDown)
+        {
+            DamagebleTimer = 0;
+            CurrentHP -= isProjectile ? TakeDamageAmountFromProjectile : TakeDamageAmount;
+
+            if (CurrentHP <= 0)
+            {
+                SceneManager.LoadScene("Win");
             }
         }
     }
