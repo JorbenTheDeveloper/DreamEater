@@ -34,6 +34,7 @@ public class BunnyBoss : MonoBehaviour
     public float HopCoolDownWhenVulnerable = 8f;
     public float DamagebleCoolDown = 2;
     public float DamagebleTimer = 0;
+    public int TakeDamageAmount = 5;
 
     [Header("Spawning")]
     public GameObject RetreatObj;
@@ -197,7 +198,7 @@ public class BunnyBoss : MonoBehaviour
             if (IsVulnerable && DamagebleTimer >= DamagebleCoolDown)
             {
                 DamagebleTimer = 0;
-                CurrentHP -= 5;
+                CurrentHP -= TakeDamageAmount;
 
                 if (CurrentHP <= 0)
                 {
@@ -239,7 +240,7 @@ public class BunnyBoss : MonoBehaviour
         {
             string dazedAnimName = "DazedInjured3";
             if (CurrentHP >= 75) dazedAnimName = "Dazed";
-            else  if (CurrentHP >= 50) dazedAnimName = "DazedInjured1";
+            else if (CurrentHP >= 50) dazedAnimName = "DazedInjured1";
             else if(CurrentHP >= 25) dazedAnimName = "DazedInjured2";
 
             isDazed = true;

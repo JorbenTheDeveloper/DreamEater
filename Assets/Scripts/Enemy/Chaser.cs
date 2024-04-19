@@ -40,8 +40,11 @@ public class Chaser : MonoBehaviour
         eatable = GetComponent<Eatable>();
         light2D = GetComponent<Light2D>();
 
-        light2D.pointLightInnerRadius = Size / 2;
-        light2D.pointLightOuterRadius = Size;
+        if (light2D != null)
+        {
+            light2D.pointLightInnerRadius = Size / 2;
+            light2D.pointLightOuterRadius = Size;
+        }
     }
 
     private void Start()
