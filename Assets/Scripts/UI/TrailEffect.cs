@@ -13,6 +13,8 @@ public class TrailEffect : MonoBehaviour
     private float timer = 0f;
 
     public GameObject spawnLocationController;
+    public float InitialSizeScale = 0.7f;
+    public float StartingFade = 1;
 
     private void Update()
     {
@@ -61,6 +63,7 @@ public class TrailEffect : MonoBehaviour
         }
 
         GameObject newObj = Instantiate(spritePrefab);
+        newObj.transform.localScale = new Vector3(Player.Instance.Size + InitialSizeScale, Player.Instance.Size + InitialSizeScale, 1);
         pooledSprites.Add(newObj);
         return newObj;
     }
@@ -75,7 +78,7 @@ public class TrailEffect : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / fadeDuration;
-            sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, Mathf.Lerp(1f, 0f, t));
+            sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, Mathf.Lerp(StartingFade, 0f, t));
             yield return null;
         }
 
