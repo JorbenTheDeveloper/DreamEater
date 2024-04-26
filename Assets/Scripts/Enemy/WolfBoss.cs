@@ -7,6 +7,8 @@ public interface IWolfPhase
 {
     Animator Animator { get; set; }
     NavMeshAgent NavMeshAgent { get; set; }
+    WolfBoss WolfBoss { get; set; }
+
     void Enter();
     void Update();
     void Exit();
@@ -14,7 +16,11 @@ public interface IWolfPhase
 
 public class WolfBoss : MonoBehaviour
 {
-    public int Speed = 1;
+    public int SlowSpeed = 3;
+    public int FastSpeed = 10;
+
+    // phase 1
+    public int StrikeDistance = 3;
 
     NavMeshAgent NavMeshAgent;
     Animator Animator;
@@ -24,11 +30,17 @@ public class WolfBoss : MonoBehaviour
     void Start()
     {
         NavMeshAgent = GetComponent<NavMeshAgent>();
+        NavMeshAgent.updateRotation = false;
+        NavMeshAgent.updateUpAxis = false;
+
         Animator = GetComponent<Animator>();
 
-        Phase1 = new WolfPhase1(gameObject, Speed);
-        Phase1.Animator = Animator;
-        Phase1.NavMeshAgent = NavMeshAgent;
+        Phase1 = new WolfPhase1
+        {
+            WolfBoss = this,
+            Animator = Animator,
+            NavMeshAgent = NavMeshAgent
+        };
         Phase1.Enter();
     }
 
