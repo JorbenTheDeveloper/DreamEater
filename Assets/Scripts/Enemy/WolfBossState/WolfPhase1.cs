@@ -13,16 +13,13 @@ public class WolfPhase1 : IWolfPhase
     private float DistanceToPlayer => Vector3.Distance(MyObject.transform.position, Player.Instance.transform.position);
 
     private string _walkAnimName = "IsWalk"; 
+    private string _clawAttackAnimName = "IsClaw";
 
     private State _state = State.None;
     private float _slowWalkTimer = Random.Range(2f, 4f);
-
     private float _tiredTimer = Random.Range(2f, 4f);
 
-    // walks slow first for random of 2-4 seconds
-    // then walks faster untill close enought to player
-    // does claw attack
-    // tired for random of 2-4 seconds
+    private float _clawAnimIndicatorTimer;
 
     public void Enter()
     {
@@ -39,12 +36,16 @@ public class WolfPhase1 : IWolfPhase
         {
             case State.None:
                 Animator.SetBool(_walkAnimName, false);
+                Animator.SetBool(_clawAttackAnimName, false);
+
                 NavMeshAgent.isStopped = true;
                 _slowWalkTimer = Random.Range(2f, 4f);
                 _tiredTimer = Random.Range(2f, 4f);
+                _clawAnimIndicatorTimer = WolfBoss.ClawAnimIndicatorDuration;
 
                 _state = State.SlowWalk;
                 break;
+
             case State.SlowWalk:
                 NavMeshAgent.speed = WolfBoss.SlowSpeed;
                 WalkTowardPlayer();
@@ -55,14 +56,33 @@ public class WolfPhase1 : IWolfPhase
                     _state = State.FastWalk;
                 }
                 break;
+
             case State.FastWalk:
                 NavMeshAgent.speed = WolfBoss.FastSpeed;
                 WalkTowardPlayer();
                 break;
 
-            case State.Attack:
-                
-                _state = State.Tired;
+            case State.StartAttack:
+                Animator.SetBool(_clawAttackAnimName, true);
+                _state = State.CurrentAttack;
+                break;
+
+            case State.CurrentAttack:
+                _clawAnimIndicatorTimer -= Time.deltaTime;
+                if (_clawAnimIndicatorTimer <= 0)
+                {
+                    WolfBoss.ClawAnim.SetActive(true);
+
+                    _state = State.EndAttack;
+                }
+                break;
+
+            case State.EndAttack:
+                if (!WolfBoss.ClawAnim.activeInHierarchy)
+                {
+                    Animator.SetBool(_clawAttackAnimName, false);
+                    _state = State.Tired;
+                }
                 break;
 
             case State.Tired:
@@ -88,7 +108,7 @@ public class WolfPhase1 : IWolfPhase
         {
             NavMeshAgent.isStopped = true;
             Animator.SetBool(_walkAnimName, false);
-            _state = State.Attack;
+            _state = State.StartAttack;
         }
     }
 
@@ -105,7 +125,9 @@ public class WolfPhase1 : IWolfPhase
         None,
         SlowWalk,
         FastWalk,
-        Attack,
+        StartAttack,
+        CurrentAttack,
+        EndAttack,
         Tired
     }
 }

@@ -21,6 +21,9 @@ public class WolfBoss : MonoBehaviour
 
     // phase 1
     public int StrikeDistance = 3;
+    public float ClawAnimIndicatorDuration = 0.5f;
+
+    public GameObject ClawAnim;
 
     NavMeshAgent NavMeshAgent;
     Animator Animator;
