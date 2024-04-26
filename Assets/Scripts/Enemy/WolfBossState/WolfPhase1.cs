@@ -40,6 +40,8 @@ public class WolfPhase1 : IWolfPhase
             case State.None:
                 Animator.SetBool(_walkAnimName, false);
                 NavMeshAgent.isStopped = true;
+                _slowWalkTimer = Random.Range(2f, 4f);
+                _tiredTimer = Random.Range(2f, 4f);
 
                 _state = State.SlowWalk;
                 break;
@@ -50,7 +52,6 @@ public class WolfPhase1 : IWolfPhase
                 _slowWalkTimer -= Time.deltaTime;
                 if (_slowWalkTimer <= 0)
                 {
-                    _slowWalkTimer = Random.Range(2f, 4f);
                     _state = State.FastWalk;
                 }
                 break;
@@ -68,7 +69,6 @@ public class WolfPhase1 : IWolfPhase
                 _tiredTimer -= Time.deltaTime;
                 if ( _tiredTimer <= 0)
                 {
-                    _tiredTimer = Random.Range(2f, 4f);
                     _state = State.None;
                 }
                 break;
@@ -81,9 +81,9 @@ public class WolfPhase1 : IWolfPhase
         TurnToDirection();
         Animator.SetBool(_walkAnimName, true);
         NavMeshAgent.isStopped = false;
-
         NavMeshAgent.SetDestination(Player.Instance.transform.position);
 
+        // if player close enough, start the attack state
         if (DistanceToPlayer <= WolfBoss.StrikeDistance)
         {
             NavMeshAgent.isStopped = true;
