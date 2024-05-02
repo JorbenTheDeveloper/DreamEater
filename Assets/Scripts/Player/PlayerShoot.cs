@@ -42,7 +42,7 @@ public class PlayerShoot : MonoBehaviour
         }
 
         // Check for shooting input within the Update method
-        if (Input.GetKeyDown(KeyCode.Space) && canShoot && Player.Instance.Size > 0.5f && canShootDuringBossFight)
+        if (Input.GetMouseButtonDown(1) && canShoot && Player.Instance.Size > 0.5f && canShootDuringBossFight)
         {
             ShootProjectile(Player.Instance.Size, transform);
         }
