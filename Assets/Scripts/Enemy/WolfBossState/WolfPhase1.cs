@@ -14,6 +14,7 @@ public class WolfPhase1 : IWolfPhase
 
     private string _walkAnimName = "IsWalk"; 
     private string _clawAttackAnimName = "IsClaw";
+    private string _tiredAnimName = "IsTired";
 
     private State _state = State.None;
     private float _slowWalkTimer = Random.Range(2f, 4f);
@@ -87,8 +88,10 @@ public class WolfPhase1 : IWolfPhase
 
             case State.Tired:
                 _tiredTimer -= Time.deltaTime;
+                Animator.SetBool(_tiredAnimName, true);
                 if ( _tiredTimer <= 0)
                 {
+                    Animator.SetBool(_tiredAnimName, false);
                     _state = State.None;
                 }
                 break;

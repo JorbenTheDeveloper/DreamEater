@@ -623,8 +623,8 @@ MonoBehaviour:
 
     Player follows mouse and rushes with left click
 
-    Spacebar
-    shoots a projectile
+    Right
+    click shoots a projectile
 
     Consume and Survive'
   m_isRightToLeft: 0
