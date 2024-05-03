@@ -5,80 +5,24 @@ using UnityEngine;
 public class ArrowPointer : MonoBehaviour
 {
     public GameObject arrow; // The arrow GameObject
-    public float orbitRadius = 1f; // Distance from the player
-    public float transitionSpeed = 2f; // Speed of transition
-    public float checkInterval = 0.5f; // Time interval to update the arrow's direction
-
-    private float timeSinceLastCheck = 0;
-    private Vector3 targetPosition; // Target position for the arrow
-    private float targetAngle = 0; // Target angle for the arrow's rotation
+    public Transform player; // Reference to the player's transform
+    public float orbitRadius = 1f; // Orbit radius around the player
+    public float orbitSpeed = 100f; // Speed at which the arrow orbits (degrees per second)
+    private float currentAngle = 0f; // Current angle of the arrow around the player in degrees
 
     void Update()
     {
-        timeSinceLastCheck += Time.deltaTime;
+        // Update the current angle based on the orbit speed and time
+        currentAngle += orbitSpeed * Time.deltaTime;
+        currentAngle %= 360; // Keep the angle in the range of 0 to 360
 
-        // Check for the nearest eligible "Eatable" periodically
-        if (timeSinceLastCheck >= checkInterval)
-        {
-            Eatable nearestEatable = FindEligibleNearestEatable();
-            if (nearestEatable != null)
-            {
-                SetTargetPositionAndRotation(nearestEatable);
-            }
-            timeSinceLastCheck = 0;
-        }
+        // Calculate the new position based on the current angle
+        float radian = currentAngle * Mathf.Deg2Rad; // Convert degrees to radians
+        Vector3 orbitPosition = new Vector3(Mathf.Cos(radian), Mathf.Sin(radian), 0) * orbitRadius;
+        arrow.transform.position = player.position + orbitPosition;
 
-        // Smoothly transition the arrow to its new position and rotation
-        arrow.transform.localPosition = Vector3.Lerp(arrow.transform.localPosition, targetPosition, transitionSpeed * Time.deltaTime);
-        arrow.transform.rotation = Quaternion.Lerp(arrow.transform.rotation, Quaternion.Euler(new Vector3(0, 0, targetAngle)), transitionSpeed * Time.deltaTime);
-    }
-
-    Eatable FindEligibleNearestEatable()
-    {
-        Eatable[] eatables = FindObjectsOfType<Eatable>(); // Find all "Eatable" objects in the scene
-        if (eatables.Length == 0) return null;
-
-        float minDistance = float.MaxValue;
-        Eatable nearestEatable = null;
-
-        Player player = Player.Instance; // Assuming Player is a singleton
-        float playerSize = player.Size; // Player's current size
-
-        foreach (Eatable eatable in eatables)
-        {
-            // Check eligibility
-            if (eatable.Size <= playerSize || eatable.IgnoreSize)
-            {
-                float distance = Vector3.Distance(player.transform.position, eatable.transform.position);
-
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    nearestEatable = eatable;
-                }
-            }
-        }
-
-        return nearestEatable;
-    }
-
-    void SetTargetPositionAndRotation(Eatable eatable)
-    {
-        // Direction from the player to the eatable
-        Vector3 direction = eatable.transform.position - Player.Instance.transform.position;
-
-        // Convert to angle in radians
-        float angleRad = Mathf.Atan2(direction.y, direction.x);
-
-        // Position on the circular path
-        targetPosition = new Vector3(
-            orbitRadius * Mathf.Cos(angleRad),
-            orbitRadius * Mathf.Sin(angleRad),
-            0 // For a 2D game, z should stay constant
-        );
-
-        // Set target angle for rotation
-        targetAngle = angleRad * Mathf.Rad2Deg;
+        // Set the arrow rotation to face outward from the center (player)
+        arrow.transform.right = orbitPosition.normalized;
     }
 }
 
