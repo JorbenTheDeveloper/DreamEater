@@ -80,11 +80,16 @@ public class Player : MonoBehaviour
         spriteRenderer.color = originalColor;
     }
 
+    public bool CanEat(Eatable eatable)
+    {
+        return Size >= eatable.Size || eatable.IgnoreSize;
+	}
+
     public void TryEat(Eatable eatable)
     {
         if (!playerMovement.IsRushing) return;
 
-        if (Size >= eatable.Size || eatable.IgnoreSize)
+        if (CanEat(eatable))
         {
             eatable.TakeDamage();
 
