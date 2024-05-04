@@ -69,6 +69,5 @@ public class WolfBoss : MonoBehaviour
         {
 			PhaseLunge.Update();
 		}
-		
     }
 }

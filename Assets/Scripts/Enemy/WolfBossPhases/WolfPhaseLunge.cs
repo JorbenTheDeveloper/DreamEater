@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.RuleTile.TilingRuleOutput;
@@ -63,12 +64,12 @@ public class WolfPhaseLunge : IWolfPhase
 				TurnToDirection();
 
 				var dis = Vector3.Distance(MyObject.transform.position, Player.Instance.transform.position);
-				dis /= 8;
+				float scaleFactor = dis / 10;
 
 				WolfBoss.LungeIndicator.transform.localScale = 
-					new Vector3(dis, 0.35f, 1);
+					new Vector3(scaleFactor, 0.35f, 1);
 				WolfBoss.LungeIndicator.transform.localPosition = 
-					new Vector3(dis / 2 * -1, indicatorY, indicatorZ);
+					new Vector3(scaleFactor / 2 * -1, indicatorY, indicatorZ);
 
 				_lungeIndicatorTimer -= Time.deltaTime;
 				if (_lungeIndicatorTimer < 0)
