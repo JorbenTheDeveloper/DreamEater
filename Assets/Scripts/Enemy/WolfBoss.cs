@@ -24,13 +24,16 @@ public class WolfBoss : MonoBehaviour
     public float ClawAnimIndicatorDuration = 0.5f;
 
     public GameObject ClawAnim;
+    public GameObject LungeIndicator;
+    public bool isPhase1 = false;
 
     NavMeshAgent NavMeshAgent;
     Animator Animator;
     IWolfPhase Phase1;
+    IWolfPhase PhaseLunge;
 
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
         NavMeshAgent = GetComponent<NavMeshAgent>();
         NavMeshAgent.updateRotation = false;
@@ -45,11 +48,27 @@ public class WolfBoss : MonoBehaviour
             NavMeshAgent = NavMeshAgent
         };
         Phase1.Enter();
-    }
+
+		PhaseLunge = new WolfPhaseLunge
+		{
+			WolfBoss = this,
+			Animator = Animator,
+			NavMeshAgent = NavMeshAgent
+		};
+		PhaseLunge.Enter();
+	}
 
     // Update is called once per frame
     void Update()
     {
-        Phase1.Update();
+        if (isPhase1)
+        {
+            Phase1.Update();
+
+		}else
+        {
+			PhaseLunge.Update();
+		}
+		
     }
 }
