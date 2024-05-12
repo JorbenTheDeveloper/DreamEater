@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class WolfPhaseLunge : IWolfPhase
 {
@@ -12,33 +9,24 @@ public class WolfPhaseLunge : IWolfPhase
 	public WolfBoss WolfBoss { get; set; }
 
 	public GameObject MyObject => WolfBoss.gameObject;
+	private float DistanceToPlayer => Vector3.Distance(MyObject.transform.position, Player.Instance.transform.position);
 
 	private State _state = State.None;
 	private float _lungeIndicatorTimer;
+	private float _clawAnimIndicatorTimer;
+	private float _tiredTimer;
 
 	private string _walkAnimName = "IsWalk";
 	private string _lungeAnimName = "IsLunge";
 	private string _clawAttackAnimName = "IsClaw";
 	private string _tiredAnimName = "IsTired";
 
-	// below 75 hp
-	// lunge at the player
-	// - claw attack
-
-	// lunge first - indicator
-	// if there is an object that it clashes with, it destroyes the object and goes into tired state
-	// if no object, and player is in the way, player get damaged
-	// claw attack once. If not close enough, move fast towards the player
-
-	float indicatorX;
 	float indicatorY;
 	float indicatorZ;
-	Vector3 targetLungePos;
 
 	public void Enter()
 	{
 		WolfBoss.LungeIndicator.SetActive(true);
-		indicatorX = WolfBoss.LungeIndicator.transform.localPosition.x;
 		indicatorY = WolfBoss.LungeIndicator.transform.localPosition.y;
 		indicatorZ = WolfBoss.LungeIndicator.transform.localPosition.z;
 	}
@@ -48,23 +36,29 @@ public class WolfPhaseLunge : IWolfPhase
 		WolfBoss.LungeIndicator.SetActive(false);
 	}
 
-
 	public void Update()
 	{
 		switch (_state)
 		{
 			case State.None:
-				_lungeIndicatorTimer = 3;
+				_lungeIndicatorTimer = WolfBoss.LungeIndicatorTimer;
+				_clawAnimIndicatorTimer = WolfBoss.ClawAnimIndicatorDuration;
+				_tiredTimer = Random.Range(2f, 4f);
+
 				Animator.SetBool(_lungeAnimName, false);
+				Animator.SetBool(_walkAnimName, false);
+				Animator.SetBool(_clawAttackAnimName, false);
+				Animator.SetBool(_tiredAnimName, false);
+				WolfBoss.LungeIndicator.SetActive(false);
 
 				_state = State.Lunge;
 				break;
+
 			case State.Lunge:
 				WolfBoss.LungeIndicator.SetActive(true);
 				TurnToDirection();
 
-				var dis = Vector3.Distance(MyObject.transform.position, Player.Instance.transform.position);
-				float scaleFactor = dis / 10;
+				float scaleFactor = DistanceToPlayer / 10;
 
 				WolfBoss.LungeIndicator.transform.localScale = 
 					new Vector3(scaleFactor, 0.35f, 1);
@@ -78,35 +72,117 @@ public class WolfPhaseLunge : IWolfPhase
 					WolfBoss.LungeIndicator.SetActive(false);
 
 					NavMeshAgent.isStopped = false;
+					NavMeshAgent.speed = WolfBoss.LungeSpeed;
 					NavMeshAgent.SetDestination(Player.Instance.transform.position);
 
 					_state = State.LungeEnd;
 				}
 				break;
+
 			case State.LungeEnd:
+				// boss reched to its lunge destination
 				if (NavMeshAgent.remainingDistance < 1)
 				{
 					Animator.SetBool(_lungeAnimName, false);
-					_state = State.Tired;
+
+					if (DistanceToPlayer <= WolfBoss.StrikeDistance)
+					{
+						_state = State.StartAttack;
+					} 
+					else
+					{
+						_state = State.FastWalk;
+					}
 				}
 				break;
+
 			case State.Tired:
-				/// stuff....
-				_state = State.None;
+				_tiredTimer -= Time.deltaTime;
+				if (_tiredTimer <= 0)
+				{
+					Animator.SetBool(_tiredAnimName, false);
+					_state = State.None;
+				}
 				break;
-			case State.FastWalk: break;
-			case State.StartAttack: break;
-			case State.CurrentAttack: break;
-			case State.EndAttack: break;
+
+			case State.FastWalk:
+				NavMeshAgent.speed = WolfBoss.FastSpeed;
+				WalkTowardPlayer();
+				break;
+
+			case State.StartAttack:
+				NavMeshAgent.isStopped = true;
+				Animator.SetBool(_walkAnimName, false);
+				TurnToDirection();
+
+				Animator.SetBool(_clawAttackAnimName, true);
+				_state = State.CurrentAttack;
+				break;
+
+			case State.CurrentAttack:
+				_clawAnimIndicatorTimer -= Time.deltaTime;
+				if (_clawAnimIndicatorTimer <= 0)
+				{
+					WolfBoss.ClawAnim.SetActive(true);
+
+					_state = State.EndAttack;
+				}
+				break;
+
+			case State.EndAttack:
+				if (!WolfBoss.ClawAnim.activeInHierarchy)
+				{
+					Animator.SetBool(_clawAttackAnimName, false);
+					_state = State.None;
+				}
+				break;
 		}
 	}
 
+	public bool Stop()
+	{
+		if (_state != State.LungeEnd) return false;
+
+		NavMeshAgent.isStopped = true;
+		Animator.SetBool(_tiredAnimName, true);
+		Animator.SetBool(_lungeAnimName, false);
+
+		_state = State.Tired;
+		return true;
+	}
+	public bool IsTired()
+	{
+		return _state == State.Tired;
+	}
+	private void WalkTowardPlayer()
+	{
+		TurnToDirection();
+		Animator.SetBool(_walkAnimName, true);
+		NavMeshAgent.isStopped = false;
+		NavMeshAgent.SetDestination(Player.Instance.transform.position);
+
+		// if player close enough, start the attack state
+		if (DistanceToPlayer <= WolfBoss.StrikeDistance)
+		{
+			_state = State.StartAttack;
+		}
+	}
 	private void TurnToDirection()
 	{
 		var dir = Player.Instance.transform.position - MyObject.transform.position;
 		float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 180;
 		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 		MyObject.transform.rotation = rotation;
+	}
+
+	public void AttackPlayer()
+	{
+		if (_state != State.LungeEnd) return;
+		NavMeshAgent.isStopped = true;
+		Animator.SetBool(_lungeAnimName, false);
+
+		Player.Instance.TakeDamage(WolfBoss.LungeDamage);
+		_state = State.FastWalk;
 	}
 
 	public enum State

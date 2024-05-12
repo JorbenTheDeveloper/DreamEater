@@ -28,8 +28,13 @@ public class WolfPhase1 : IWolfPhase
 
     public void Exit()
     {
-        Animator.SetBool(_walkAnimName, false);
-    }
+		Animator.SetBool(_walkAnimName, false);
+		Animator.SetBool(_clawAttackAnimName, false);
+		Animator.SetBool(_tiredAnimName, false);
+		NavMeshAgent.isStopped = true;
+
+		_state = State.None;
+	}
 
     public void Update()
     {
@@ -97,8 +102,17 @@ public class WolfPhase1 : IWolfPhase
                     _state = State.None;
                 }
                 break;
-
         }
+    }
+
+    public bool Stop()
+    {
+        return true;
+    }
+
+    public bool IsTired()
+    {
+        return _state == State.Tired;
     }
 
     private void WalkTowardPlayer()

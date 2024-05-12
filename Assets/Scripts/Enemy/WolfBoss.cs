@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,42 +11,56 @@ public interface IWolfPhase
     void Enter();
     void Update();
     void Exit();
+    bool Stop();
+    bool IsTired();
 }
 
 public class WolfBoss : MonoBehaviour
 {
-    public int SlowSpeed = 3;
-    public int FastSpeed = 10;
+    public int curHP = 100;
+    public int MaxHP = 100;
+    public int PlayerDamage = 5;
 
-    // phase 1
-    public int StrikeDistance = 3;
+    [Header("Phase 1")]
     public float ClawAnimIndicatorDuration = 0.5f;
 
-    public GameObject ClawAnim;
-    public GameObject LungeIndicator;
-    public bool isPhase1 = false;
+	[Header("Phase Lunge")]
+	public float LungeIndicatorTimer = 3f;
+	public int LungeSpeed = 35;
+    public int LungeDamage = 10;
+	public GameObject LungeIndicator;
 
-    NavMeshAgent NavMeshAgent;
+	[Header("Shared")]
+	public int StrikeDistance = 3;
+	public GameObject ClawAnim;
+	public int SlowSpeed = 3;
+	public int FastSpeed = 10;
+
+    private bool _canTakeDamage = true;
+
+	NavMeshAgent NavMeshAgent;
     Animator Animator;
     IWolfPhase Phase1;
     IWolfPhase PhaseLunge;
+    IWolfPhase CurPhase;
 
 	// Start is called before the first frame update
 	void Start()
     {
-        NavMeshAgent = GetComponent<NavMeshAgent>();
+		NavMeshAgent = GetComponent<NavMeshAgent>();
         NavMeshAgent.updateRotation = false;
         NavMeshAgent.updateUpAxis = false;
 
         Animator = GetComponent<Animator>();
 
-        Phase1 = new WolfPhase1
+		curHP = MaxHP;
+
+		Phase1 = new WolfPhase1
         {
             WolfBoss = this,
             Animator = Animator,
             NavMeshAgent = NavMeshAgent
         };
-        Phase1.Enter();
 
 		PhaseLunge = new WolfPhaseLunge
 		{
@@ -55,19 +68,46 @@ public class WolfBoss : MonoBehaviour
 			Animator = Animator,
 			NavMeshAgent = NavMeshAgent
 		};
-		PhaseLunge.Enter();
+
+        CurPhase = Phase1;
+        CurPhase.Enter();
 	}
 
     // Update is called once per frame
     void Update()
     {
-        if (isPhase1)
-        {
-            Phase1.Update();
+		CurPhase.Update();
 
-		}else
+        if (curHP <= 75 && !CurPhase.IsTired())
         {
-			PhaseLunge.Update();
+            CurPhase = PhaseLunge;
 		}
-    }
+	}
+
+	private void OnCollisionStay2D(Collision2D collision)
+	{
+        if (!collision.gameObject.CompareTag("Player")) return;
+		if (CurPhase.IsTired() && _canTakeDamage)
+        {
+			_canTakeDamage = false;
+			curHP -= PlayerDamage;
+            Invoke(nameof(ToggleTakeDamage), 1);
+        }
+		else if (CurPhase is WolfPhaseLunge)
+        {
+            (CurPhase as WolfPhaseLunge).AttackPlayer();
+		}
+	}
+
+    private void ToggleTakeDamage()
+    {
+        _canTakeDamage = true;
+	}
+
+	public bool Stop()
+    {
+		if (CurPhase is WolfPhaseLunge)
+			return CurPhase.Stop();
+        return false;
+	}
 }
