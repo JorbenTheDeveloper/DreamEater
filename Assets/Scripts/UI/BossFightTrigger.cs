@@ -108,7 +108,7 @@ public class BossFightTrigger : MonoBehaviour
     {
         if (playerMovement != null)
         {
-            playerMovement.EnableMovement();
+            playerMovement.EnableMovement(true);
         }
         if (playerAnimator != null) playerAnimator.enabled = true;
     }

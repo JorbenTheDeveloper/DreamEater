@@ -223,23 +223,31 @@ public class PlayerMovement : MonoBehaviour
 
     public void StopMovement()
     {
-        inputEnabled = false; // Disable input handling.
-                              // If using a NavMeshAgent, consider stopping its current movement.
+        Debug.Log("Stopping Movement");
+        inputEnabled = false;
         if (agent != null)
         {
             agent.isStopped = true;
         }
     }
 
-    public void EnableMovement()
+    public void EnableMovement(bool v)
     {
-        inputEnabled = true; // Re-enable input handling.
-
+        Debug.Log("Enabling Movement: " + v);
+        inputEnabled = v;
         if (agent != null)
         {
-            agent.isStopped = false; // Make sure the NavMeshAgent can move again.
+            agent.isStopped = !v;
         }
     }
 
+    public void DisableMovement(bool v)
+    {
+        inputEnabled = false; // Disable input handling.
 
+        if (agent != null)
+        {
+            agent.isStopped = true; // Stop the NavMeshAgent from moving.
+        }
+    }
 }
