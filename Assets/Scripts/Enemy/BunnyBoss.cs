@@ -210,7 +210,7 @@ public class BunnyBoss : MonoBehaviour
 
             if (CurrentHP <= 0)
             {
-                SceneManager.LoadScene("Win");
+                SceneManager.LoadScene("LevelTwo");
             }
         }
     }
