@@ -16,10 +16,11 @@ public class WolfPhaseLunge : IWolfPhase
 	private float _clawAnimIndicatorTimer;
 	private float _tiredTimer;
 
-	private string _walkAnimName = "IsWalk";
-	private string _lungeAnimName = "IsLunge";
-	private string _clawAttackAnimName = "IsClaw";
-	private string _tiredAnimName = "IsTired";
+	private string _idleAnimName = "IsIdleBloody1";
+	private string _walkAnimName = "IsWalkBloody1";
+	private string _lungeAnimName = "IsLungeBloody1";
+	private string _clawAttackAnimName = "IsClawBloody1";
+	private string _tiredAnimName = "IsTiredBloody1";
 
 	float indicatorY;
 	float indicatorZ;
@@ -51,7 +52,17 @@ public class WolfPhaseLunge : IWolfPhase
 				Animator.SetBool(_tiredAnimName, false);
 				WolfBoss.LungeIndicator.SetActive(false);
 
-				_state = State.Lunge;
+                if (!Animator.GetBool(_lungeAnimName) && !Animator.GetBool(_walkAnimName) &&
+    !Animator.GetBool(_clawAttackAnimName) && !Animator.GetBool(_tiredAnimName))
+                {
+                    Animator.SetBool(_idleAnimName, true);
+                }
+                else
+                {
+                    Animator.SetBool(_idleAnimName, false);
+                }
+
+                _state = State.Lunge;
 				break;
 
 			case State.Lunge:
