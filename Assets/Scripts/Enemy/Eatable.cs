@@ -10,6 +10,8 @@ public class Eatable : MonoBehaviour
     public float growRate = 0.1f;
     public ParticleSystem deathEffect; // Attached Particle System component for death effect
 
+    public bool IsEaten = false;
+
     private Collider2D colliderEatable2D;
     private SpriteRenderer spriteRenderer;
 
@@ -38,9 +40,9 @@ public class Eatable : MonoBehaviour
         // Disable collider and sprite renderer to "remove" the object from game interactions and visibility
         colliderEatable2D.enabled = false;
         spriteRenderer.enabled = false;
-
-        // Trigger the death particle effect
-        if (deathEffect != null)
+        IsEaten = true;
+		// Trigger the death particle effect
+		if (deathEffect != null)
         {
             deathEffect.Play();
             // Schedule the destruction of the GameObject after the particle effect duration
