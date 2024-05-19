@@ -6,9 +6,15 @@ public class WolfPhase1 : IWolfPhase
 {
     public Animator Animator { get; set; }
     public NavMeshAgent NavMeshAgent { get; set; }
+	public bool IsRunning { get; set; }
     public GameObject MyObject => WolfBoss.gameObject;
 
-    public WolfBoss WolfBoss { get; set; }
+    public float StrikeDistance = 10;
+    public float ClawAnimIndicatorDuration = 1;
+    public float SlowSpeed = 3;
+    public float FastSpeed = 8;
+
+	public WolfBoss WolfBoss { get; set; }
 
     private float DistanceToPlayer => Vector3.Distance(MyObject.transform.position, Player.Instance.transform.position);
 
@@ -24,16 +30,17 @@ public class WolfPhase1 : IWolfPhase
 
     public void Enter()
     {
-    }
+        IsRunning = true;
+	}
 
     public void Exit()
     {
 		Animator.SetBool(_walkAnimName, false);
 		Animator.SetBool(_clawAttackAnimName, false);
 		Animator.SetBool(_tiredAnimName, false);
-		NavMeshAgent.isStopped = true;
 
 		_state = State.None;
+		IsRunning = false;
 	}
 
     public void Update()
@@ -47,13 +54,13 @@ public class WolfPhase1 : IWolfPhase
                 NavMeshAgent.isStopped = true;
                 _slowWalkTimer = Random.Range(2f, 4f);
                 _tiredTimer = Random.Range(2f, 4f);
-                _clawAnimIndicatorTimer = WolfBoss.ClawAnimIndicatorDuration;
+                _clawAnimIndicatorTimer = ClawAnimIndicatorDuration;
 
                 _state = State.SlowWalk;
                 break;
 
             case State.SlowWalk:
-                NavMeshAgent.speed = WolfBoss.SlowSpeed;
+                NavMeshAgent.speed = SlowSpeed;
                 WalkTowardPlayer();
 
                 _slowWalkTimer -= Time.deltaTime;
@@ -64,7 +71,7 @@ public class WolfPhase1 : IWolfPhase
                 break;
 
             case State.FastWalk:
-                NavMeshAgent.speed = WolfBoss.FastSpeed;
+                NavMeshAgent.speed = FastSpeed;
                 WalkTowardPlayer();
                 break;
 
@@ -123,7 +130,7 @@ public class WolfPhase1 : IWolfPhase
         NavMeshAgent.SetDestination(Player.Instance.transform.position);
 
         // if player close enough, start the attack state
-        if (DistanceToPlayer <= WolfBoss.StrikeDistance)
+        if (DistanceToPlayer <= StrikeDistance)
         {
             NavMeshAgent.isStopped = true;
             Animator.SetBool(_walkAnimName, false);

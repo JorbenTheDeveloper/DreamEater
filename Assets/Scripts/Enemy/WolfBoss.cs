@@ -7,6 +7,7 @@ public interface IWolfPhase
     Animator Animator { get; set; }
     NavMeshAgent NavMeshAgent { get; set; }
     WolfBoss WolfBoss { get; set; }
+	bool IsRunning { get; set; }
 
     void Enter();
     void Update();
@@ -21,20 +22,11 @@ public class WolfBoss : MonoBehaviour
     public int MaxHP = 100;
     public int PlayerDamage = 5;
 
-    [Header("Phase 1")]
-    public float ClawAnimIndicatorDuration = 0.5f;
-
 	[Header("Phase Lunge")]
-	public float LungeIndicatorTimer = 3f;
-	public int LungeSpeed = 35;
-    public int LungeDamage = 10;
 	public GameObject LungeIndicator;
 
 	[Header("Shared")]
-	public int StrikeDistance = 3;
 	public GameObject ClawAnim;
-	public int SlowSpeed = 3;
-	public int FastSpeed = 10;
 
     private bool _canTakeDamage = true;
 
@@ -42,7 +34,8 @@ public class WolfBoss : MonoBehaviour
     Animator Animator;
     IWolfPhase Phase1;
     IWolfPhase PhaseLunge;
-    IWolfPhase CurPhase;
+    IWolfPhase Phase3;
+	IWolfPhase CurPhase;
 
 	// Start is called before the first frame update
 	void Start()
@@ -59,18 +52,45 @@ public class WolfBoss : MonoBehaviour
         {
             WolfBoss = this,
             Animator = Animator,
-            NavMeshAgent = NavMeshAgent
-        };
+            NavMeshAgent = NavMeshAgent,
+			StrikeDistance = 10,
+			ClawAnimIndicatorDuration = 1,
+			SlowSpeed = 3,
+			FastSpeed = 8
+		};
 
 		PhaseLunge = new WolfPhaseLunge
 		{
 			WolfBoss = this,
 			Animator = Animator,
-			NavMeshAgent = NavMeshAgent
+			NavMeshAgent = NavMeshAgent,
+
+			StrikeDistance = 10,
+			ClawAnimIndicatorDuration = 1,
+			SlowSpeed = 3,
+			FastSpeed = 8,
+			LungeIndicatorTimer = 3,
+			LungeSpeed = 35,
+			LungeDamage = 10
 		};
 
-        CurPhase = PhaseLunge;
-        CurPhase.Enter();
+		Phase3 = new WolfPhase3
+		{
+			WolfBoss = this,
+			Animator = Animator,
+			NavMeshAgent = NavMeshAgent,
+
+			StrikeDistance = 12,
+			ClawAnimIndicatorDuration = 0.5f,
+			SlowSpeed = 6,
+			FastSpeed = 9,
+			LungeIndicatorTimer = 1,
+			LungeSpeed = 35,
+			LungeDamage = 10
+		};
+
+		CurPhase = Phase1;
+		Phase1.Enter();
 	}
 
     // Update is called once per frame
@@ -78,9 +98,19 @@ public class WolfBoss : MonoBehaviour
     {
 		CurPhase.Update();
 
-        if (curHP <= 75 && !CurPhase.IsTired())
-        {
-            CurPhase = PhaseLunge;
+		if (!CurPhase.IsTired()) return;
+
+		if (!Phase3.IsRunning && curHP <= 25)
+		{
+			CurPhase = Phase3;
+			PhaseLunge.Exit();
+			Phase3.Enter();
+		}
+		else if (!PhaseLunge.IsRunning && curHP <= 75)
+		{
+			CurPhase = PhaseLunge;
+			Phase1.Exit();
+			PhaseLunge.Enter();
 		}
 	}
 
