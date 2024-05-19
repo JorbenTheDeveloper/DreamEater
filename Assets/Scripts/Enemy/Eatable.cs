@@ -37,6 +37,7 @@ public class Eatable : MonoBehaviour
 
     private void Die()
     {
+        AudioManager.Instance.Play("Eat");
         // Disable collider and sprite renderer to "remove" the object from game interactions and visibility
         colliderEatable2D.enabled = false;
         spriteRenderer.enabled = false;

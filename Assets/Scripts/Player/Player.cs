@@ -119,6 +119,7 @@ public class Player : MonoBehaviour
     {
         if (!IsMaxGrow())
         {
+            
             float previousSize = Size;
             float newSize = Mathf.Min(Size + value, maxGrow);
 
