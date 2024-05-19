@@ -45,24 +45,16 @@ public class WolfPhaseLunge : IWolfPhase
 				_lungeIndicatorTimer = WolfBoss.LungeIndicatorTimer;
 				_clawAnimIndicatorTimer = WolfBoss.ClawAnimIndicatorDuration;
 				_tiredTimer = Random.Range(2f, 4f);
+				WolfBoss.LungeIndicator.SetActive(false);
 
 				Animator.SetBool(_lungeAnimName, false);
 				Animator.SetBool(_walkAnimName, false);
 				Animator.SetBool(_clawAttackAnimName, false);
 				Animator.SetBool(_tiredAnimName, false);
-				WolfBoss.LungeIndicator.SetActive(false);
 
-                if (!Animator.GetBool(_lungeAnimName) && !Animator.GetBool(_walkAnimName) &&
-    !Animator.GetBool(_clawAttackAnimName) && !Animator.GetBool(_tiredAnimName))
-                {
-                    Animator.SetBool(_idleAnimName, true);
-                }
-                else
-                {
-                    Animator.SetBool(_idleAnimName, false);
-                }
+				Animator.SetBool(_idleAnimName, true);
 
-                _state = State.Lunge;
+				_state = State.Lunge;
 				break;
 
 			case State.Lunge:
@@ -80,6 +72,7 @@ public class WolfPhaseLunge : IWolfPhase
 				if (_lungeIndicatorTimer < 0)
 				{
 					Animator.SetBool(_lungeAnimName, true);
+					Animator.SetBool(_idleAnimName, false);
 					WolfBoss.LungeIndicator.SetActive(false);
 
 					NavMeshAgent.isStopped = false;

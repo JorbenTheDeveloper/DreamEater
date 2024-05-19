@@ -69,7 +69,7 @@ public class WolfBoss : MonoBehaviour
 			NavMeshAgent = NavMeshAgent
 		};
 
-        CurPhase = Phase1;
+        CurPhase = PhaseLunge;
         CurPhase.Enter();
 	}
 
