@@ -164,11 +164,12 @@ public class WolfPhaseLunge : IWolfPhase
 	{
 		if (_state != State.LungeEnd) return false;
 
-		NavMeshAgent.isStopped = true;
+        NavMeshAgent.isStopped = true;
 		Animator.SetBool(_tiredAnimName, true);
-		Animator.SetBool(_lungeAnimName, false);
+        Animator.SetBool(_lungeAnimName, false);
+        AudioManager.Instance.Play("Slam");
 
-		_state = State.Tired;
+        _state = State.Tired;
 		return true;
 	}
 	public bool IsTired()

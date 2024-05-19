@@ -235,6 +235,7 @@ public class BunnyBoss : MonoBehaviour
         LookAtPlayer();
         yield return new WaitForSeconds(0.4f);
 
+        AudioManager.Instance.Play("Slam");
         animator.SetBool("Fall", false);
         SpawnParticleEffect();
         FallingShadow.gameObject.SetActive(false);
