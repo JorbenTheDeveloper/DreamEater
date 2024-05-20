@@ -22,7 +22,7 @@ public class WolfBossTrigger : MonoBehaviour
     private void Start()
     {
         wolfBoss.SetActive(false);
-        //wolfBossHPBar.SetActive(false);
+        wolfBossHPBar.SetActive(false);
 
         if (timeline != null)
         {
@@ -43,7 +43,7 @@ public class WolfBossTrigger : MonoBehaviour
     {
         exitBlockerTilemap.gameObject.SetActive(true);
         wolfBoss.SetActive(true);
-        //wolfBossHPBar.SetActive(true);
+        wolfBossHPBar.SetActive(true);
         boss1Camera.gameObject.SetActive(true);
         boss2Camera.gameObject.SetActive(true);
         timeline.gameObject.SetActive(true);

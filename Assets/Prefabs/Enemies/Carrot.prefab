@@ -284,6 +284,7 @@ MonoBehaviour:
   IgnoreSize: 0
   growRate: 0.1
   deathEffect: {fileID: 7188155396035919482}
+  IsEaten: 0
 --- !u!198 &7188155396035919482
 ParticleSystem:
   m_ObjectHideFlags: 0
