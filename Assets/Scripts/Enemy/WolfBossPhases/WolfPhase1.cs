@@ -79,6 +79,7 @@ public class WolfPhase1 : IWolfPhase
 				TurnToDirection();
 
 				Animator.SetBool(_clawAttackAnimName, true);
+                AudioManager.Instance.Play("WolfClaw");
                 _state = State.CurrentAttack;
                 break;
 

@@ -64,6 +64,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damageValue)
     {
         CinemachineCameraShake.Shake();
+        AudioManager.Instance.Play("Injury");
         spriteRenderer.color = DamagedColor;
         Invoke(nameof(OriginalColor), 0.2f);
         currentHP -= damageValue;
