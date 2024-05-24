@@ -152,7 +152,8 @@ public class Player : MonoBehaviour
         if (growthParticles != null)
         {
             growthParticles.Play(); // Start playing the particle effect
-            Invoke("StopGrowthParticles", 3f); // Schedule the stopping of the particle system after 3 seconds
+            growthParticles.transform.localScale = Vector3.one * Size * 3;
+			Invoke("StopGrowthParticles", 2f); // Schedule the stopping of the particle system after 3 seconds
         }
     }
 
