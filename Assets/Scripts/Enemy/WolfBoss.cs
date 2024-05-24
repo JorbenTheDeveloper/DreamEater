@@ -21,6 +21,7 @@ public class WolfBoss : MonoBehaviour
     public int curHP = 100;
     public int MaxHP = 100;
     public int PlayerDamage = 5;
+	public int TakeDamageAmountFromProjectile = 10;
 
 	[Header("Phase Lunge")]
 	public GameObject LungeIndicator;
@@ -119,13 +120,22 @@ public class WolfBoss : MonoBehaviour
         if (!collision.gameObject.CompareTag("Player")) return;
 		if (CurPhase.IsTired() && _canTakeDamage)
         {
-			_canTakeDamage = false;
-			curHP -= PlayerDamage;
-            Invoke(nameof(ToggleTakeDamage), 1);
-        }
+			TakeDamage(false);
+
+		}
 		else if (CurPhase is WolfPhaseLunge)
         {
             (CurPhase as WolfPhaseLunge).AttackPlayer();
+		}
+	}
+
+	public void TakeDamage(bool isProjectile)
+	{
+		if (CurPhase.IsTired() && _canTakeDamage)
+		{
+			_canTakeDamage = false;
+			curHP -= isProjectile ? TakeDamageAmountFromProjectile :PlayerDamage;
+			Invoke(nameof(ToggleTakeDamage), 1);
 		}
 	}
 

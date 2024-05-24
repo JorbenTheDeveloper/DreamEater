@@ -19,6 +19,7 @@ public class AbsorbProjectile : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.gameObject.tag);
         if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!canAttack) return;
@@ -42,6 +43,11 @@ public class AbsorbProjectile : MonoBehaviour
             {
                 boss.TakeDamage(true);
             }
-        }
+
+			if (collision.gameObject.TryGetComponent(out WolfBoss wolfBoss))
+			{
+				wolfBoss.TakeDamage(true);
+			}
+		}
     }
 }
