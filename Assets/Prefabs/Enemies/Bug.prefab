@@ -111,6 +111,7 @@ MonoBehaviour:
   IgnoreSize: 0
   growRate: 0.1
   deathEffect: {fileID: 3283926393185198514}
+  IsEaten: 0
 --- !u!61 &7790051110519278113
 BoxCollider2D:
   m_ObjectHideFlags: 0
