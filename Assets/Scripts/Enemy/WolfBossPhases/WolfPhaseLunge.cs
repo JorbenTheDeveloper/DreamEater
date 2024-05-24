@@ -168,7 +168,8 @@ public class WolfPhaseLunge : IWolfPhase
         NavMeshAgent.isStopped = true;
 		Animator.SetBool(_tiredAnimName, true);
         Animator.SetBool(_lungeAnimName, false);
-        AudioManager.Instance.Play("Slam");
+		WolfBoss.LungeIndicator.SetActive(false);
+		AudioManager.Instance.Play("Slam");
 
         _state = State.Tired;
 		return true;
