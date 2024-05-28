@@ -47,6 +47,7 @@ public class WolfBossTrigger : MonoBehaviour
         boss1Camera.gameObject.SetActive(true);
         boss2Camera.gameObject.SetActive(true);
         timeline.gameObject.SetActive(true);
+        AudioManager.Instance.Play("BossMusic");
 
         if (playerMovement != null)
         {

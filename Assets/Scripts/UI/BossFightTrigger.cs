@@ -24,6 +24,7 @@ public class BossFightTrigger : MonoBehaviour
     {
         boss.SetActive(false);
         bossHPBar.SetActive(false);
+        
 
         // Get the PlayerMovement component from the player GameObject
         if (player != null)
@@ -63,8 +64,8 @@ public class BossFightTrigger : MonoBehaviour
         targetTilemap.gameObject.SetActive(true);
         boss.SetActive(true);
         bossHPBar.SetActive(true);
+        AudioManager.Instance.Play("BossMusic");
 
-        
         if (bossFightText != null)
         {
             bossFightText.gameObject.SetActive(true);

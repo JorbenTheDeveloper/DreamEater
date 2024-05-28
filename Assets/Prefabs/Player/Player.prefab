@@ -1360,7 +1360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHP: 100
   maxGrow: 4
-  StartingSize: 3
+  StartingSize: 2
   sizeReduction: 0.1
   cinemachineCamera: {fileID: 0}
   CinemachineCameraShake: {fileID: 0}
@@ -1556,8 +1556,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1673990163644823129}
-  orbitRadius: 3
-  orbitSpeed: 1
 --- !u!1 &8154641240664566692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1743,7 +1741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5057522759724245395, guid: 9eac119523697a644858ae865aeaa6f7, type: 3}
       propertyPath: looping
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5057522759724245395, guid: 9eac119523697a644858ae865aeaa6f7, type: 3}
       propertyPath: lengthInSec
@@ -1752,6 +1750,14 @@ PrefabInstance:
     - target: {fileID: 5057522759724245395, guid: 9eac119523697a644858ae865aeaa6f7, type: 3}
       propertyPath: playOnAwake
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5057522759724245395, guid: 9eac119523697a644858ae865aeaa6f7, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5057522759724245395, guid: 9eac119523697a644858ae865aeaa6f7, type: 3}
+      propertyPath: SizeModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5057522759724245395, guid: 9eac119523697a644858ae865aeaa6f7, type: 3}
       propertyPath: ShapeModule.arc.mode
