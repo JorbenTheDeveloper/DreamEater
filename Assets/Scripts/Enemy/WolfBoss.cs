@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public interface IWolfPhase
 {
@@ -113,6 +114,11 @@ public class WolfBoss : MonoBehaviour
 			Phase1.Exit();
 			PhaseLunge.Enter();
 		}
+
+		else if (curHP <= 0)
+		{
+            SceneManager.LoadScene("EndingCutscene");
+        }
 	}
 
 	private void OnCollisionStay2D(Collision2D collision)
