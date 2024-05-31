@@ -5,6 +5,7 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class Player : MonoBehaviour
 
     public ParticleSystem growthParticles;
     public float particleSystemScale = 1f;
+    public ParticleSystem BloodParticleFx;
+    public Image VignetteImage;
 
     public bool IsVulnerable => playerMovement.HasExhausted();
 
@@ -66,7 +69,8 @@ public class Player : MonoBehaviour
         CinemachineCameraShake.Shake();
         AudioManager.Instance.Play("Injury");
         spriteRenderer.color = DamagedColor;
-        Invoke(nameof(OriginalColor), 0.2f);
+        VignetteImage?.gameObject.SetActive(true);
+		Invoke(nameof(OriginalColor), 0.2f);
         currentHP -= damageValue;
         currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
 
@@ -78,8 +82,15 @@ public class Player : MonoBehaviour
 
     void OriginalColor()
     {
-        spriteRenderer.color = originalColor;
+		VignetteImage?.gameObject.SetActive(false);
+		spriteRenderer.color = originalColor;
     }
+
+    public void ShowBloodParticle()
+    {
+        BloodParticleFx.Stop();
+        BloodParticleFx.Play();
+	}
 
     public bool CanEat(Eatable eatable)
     {

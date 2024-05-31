@@ -51,20 +51,14 @@ public class BunnyBoss : MonoBehaviour
     private bool IsVulnerable => HopCount >= MaxHopBeforeVulnerable;
     private bool isDazed = false;
 
-    // for testing
-    private Color originalColor;
-    private Color vulnerableColor = new Color(255f / 255, 119f / 255, 119f / 255);
-
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        
     }
 
     private void Start()
     {
-        originalColor = spriteRenderer.color;
         DamagebleTimer = DamagebleCoolDown;
         CurrentHP = MaxHP;
 
@@ -207,15 +201,22 @@ public class BunnyBoss : MonoBehaviour
         {
             DamagebleTimer = 0;
             CurrentHP -= isProjectile ? TakeDamageAmountFromProjectile : TakeDamageAmount;
-
-            if (CurrentHP <= 0)
+			if (!isProjectile) Player.Instance.ShowBloodParticle();
+			spriteRenderer.color = Color.red;
+			Invoke(nameof(ToggleColor), 0.2f);
+			if (CurrentHP <= 0)
             {
                 SceneManager.LoadScene("LevelTwo");
             }
         }
     }
 
-    IEnumerator Hop()
+	private void ToggleColor()
+	{
+		spriteRenderer.color = Color.white;
+	}
+
+	IEnumerator Hop()
     {
         animator.SetBool("Hop", true);
 

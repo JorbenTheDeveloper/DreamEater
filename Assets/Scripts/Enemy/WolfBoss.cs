@@ -31,6 +31,8 @@ public class WolfBoss : MonoBehaviour
 	public GameObject ClawAnim;
 
     private bool _canTakeDamage = true;
+	private SpriteRenderer _spriteRenderer;
+	private Rigidbody2D _rigidbody2D;
 
 	NavMeshAgent NavMeshAgent;
     Animator Animator;
@@ -38,6 +40,12 @@ public class WolfBoss : MonoBehaviour
     IWolfPhase PhaseLunge;
     IWolfPhase Phase3;
 	IWolfPhase CurPhase;
+
+	private void Awake()
+	{
+		_spriteRenderer = GetComponent<SpriteRenderer>();
+		_rigidbody2D = GetComponent<Rigidbody2D>();
+	}
 
 	// Start is called before the first frame update
 	void Start()
@@ -98,6 +106,7 @@ public class WolfBoss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		_rigidbody2D.velocity = Vector3.zero;
 		CurPhase.Update();
 
 		if (!CurPhase.IsTired()) return;
@@ -141,6 +150,9 @@ public class WolfBoss : MonoBehaviour
 		{
 			_canTakeDamage = false;
 			curHP -= isProjectile ? TakeDamageAmountFromProjectile :PlayerDamage;
+			if (!isProjectile) Player.Instance.ShowBloodParticle();
+			_spriteRenderer.color = Color.red;
+			Invoke(nameof(ToggleColor), 0.2f);
 			Invoke(nameof(ToggleTakeDamage), 1);
 		}
 	}
@@ -148,6 +160,11 @@ public class WolfBoss : MonoBehaviour
     private void ToggleTakeDamage()
     {
         _canTakeDamage = true;
+	}
+
+	private void ToggleColor()
+	{
+		_spriteRenderer.color = Color.white;
 	}
 
 	public bool Stop()
