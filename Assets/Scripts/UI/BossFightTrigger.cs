@@ -13,8 +13,9 @@ public class BossFightTrigger : MonoBehaviour
     public GameObject player; // Reference to the player GameObject
     public BunnyBoss BunnyBoss;
     public TMPro.TextMeshProUGUI bossFightText;
+	public GameObject PlayerArrow;
 
-    private PlayerMovement playerMovement; // Reference to the player's movement script
+	private PlayerMovement playerMovement; // Reference to the player's movement script
     private bool hasBeenTriggered = false; // Flag to check if the trigger has already been activated
     private Animator playerAnimator;
 
@@ -64,7 +65,8 @@ public class BossFightTrigger : MonoBehaviour
         targetTilemap.gameObject.SetActive(true);
         boss.SetActive(true);
         bossHPBar.SetActive(true);
-        AudioManager.Instance.Play("BossMusic");
+		PlayerArrow.SetActive(false);
+		AudioManager.Instance.Play("BossMusic");
 
         if (bossFightText != null)
         {
