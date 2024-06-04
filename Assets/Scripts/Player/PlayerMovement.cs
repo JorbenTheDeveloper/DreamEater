@@ -198,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
     void SpawnParticleEffect()
     {
         GameObject effect = Instantiate(particleEffectPrefab, transform.position, Quaternion.identity);
-
+        AudioManager.Instance.Play("Dash");
         // Set the particle effect's scale to match the player's scale
         effect.transform.localScale = transform.localScale;
 

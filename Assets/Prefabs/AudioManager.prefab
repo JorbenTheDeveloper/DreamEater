@@ -117,3 +117,21 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: WolfHurt
+    clip: {fileID: 8300000, guid: 9b26cd9029dc38b4dbc5dae7ef1b8cd3, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Shot
+    clip: {fileID: 8300000, guid: 20d7f12e440028044a618868a815407a, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Dash
+    clip: {fileID: 8300000, guid: aa01360d8e029c648a6deac85eb0bbc6, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
