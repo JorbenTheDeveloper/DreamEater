@@ -150,7 +150,8 @@ public class WolfBoss : MonoBehaviour
 		{
 			_canTakeDamage = false;
 			curHP -= isProjectile ? TakeDamageAmountFromProjectile :PlayerDamage;
-			if (!isProjectile) Player.Instance.ShowBloodParticle();
+            AudioManager.Instance.Play("WolfHurt");
+            if (!isProjectile) Player.Instance.ShowBloodParticle();
 			_spriteRenderer.color = Color.red;
 			Invoke(nameof(ToggleColor), 0.2f);
 			Invoke(nameof(ToggleTakeDamage), 1);

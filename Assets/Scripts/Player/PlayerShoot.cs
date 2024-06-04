@@ -51,7 +51,7 @@ public class PlayerShoot : MonoBehaviour
     public void ShootProjectile(float size, Transform playerTransform)
     {
         shootTimer = shootInterval;
-
+        AudioManager.Instance.Play("Shot");
         var currentProjectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
         currentProjectile.transform.localScale = new Vector3(size, size, 1.0f);
         currentProjectile.GetComponent<Eatable>().Size = size;
