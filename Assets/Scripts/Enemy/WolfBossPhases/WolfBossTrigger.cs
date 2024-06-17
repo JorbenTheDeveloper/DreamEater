@@ -38,6 +38,13 @@ public class WolfBossTrigger : MonoBehaviour
 
         hasBeenTriggered = true;
         TriggerBossFight();
+
+        // Set checkpoint when the player triggers the boss fight
+        Player playerComponent = player.GetComponent<Player>();
+        if (playerComponent != null)
+        {
+            playerComponent.SetCheckpoint(player.transform.position);
+        }
     }
 
     private void TriggerBossFight()
@@ -48,8 +55,8 @@ public class WolfBossTrigger : MonoBehaviour
         boss1Camera.gameObject.SetActive(true);
         boss2Camera.gameObject.SetActive(true);
         timeline.gameObject.SetActive(true);
-		PlayerArrow.SetActive(false);
-		AudioManager.Instance.Play("BossMusic");
+        PlayerArrow.SetActive(false);
+        AudioManager.Instance.Play("BossMusic");
 
         if (playerMovement != null)
         {
@@ -88,8 +95,6 @@ public class WolfBossTrigger : MonoBehaviour
             playerMovement.EnableMovement(true); // Ensure to pass true to re-enable movement
         }
         PlayerShoot.canShootDuringBossFight = true;
-
-      
     }
 
     private void OnDestroy()

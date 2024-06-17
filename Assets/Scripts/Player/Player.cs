@@ -35,8 +35,11 @@ public class Player : MonoBehaviour
     public bool IsVulnerable => playerMovement.HasExhausted();
 
     private UnityEngine.Color originalColor;
+    private Vector3 checkpointPosition;
+    private bool checkpointActivated = false;
 
     SpriteRenderer spriteRenderer;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -56,12 +59,34 @@ public class Player : MonoBehaviour
         transform.localScale = new Vector3(StartingSize, StartingSize, 1);
 
         StartCoroutine(AdjustCameraSize(1));
-        
+
+        if (PlayerPrefs.HasKey("CheckpointActivated") && PlayerPrefs.GetInt("CheckpointActivated") == 1)
+        {
+            float x = PlayerPrefs.GetFloat("CheckpointX");
+            float y = PlayerPrefs.GetFloat("CheckpointY");
+            float z = PlayerPrefs.GetFloat("CheckpointZ");
+            checkpointPosition = new Vector3(x, y, z);
+            transform.position = checkpointPosition;
+            checkpointActivated = true;
+        }
     }
 
     private void Update()
     {
-        
+        if (currentHP <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+    public void SetCheckpoint(Vector3 newCheckpoint)
+    {
+        checkpointPosition = newCheckpoint;
+        PlayerPrefs.SetFloat("CheckpointX", checkpointPosition.x);
+        PlayerPrefs.SetFloat("CheckpointY", checkpointPosition.y);
+        PlayerPrefs.SetFloat("CheckpointZ", checkpointPosition.z);
+        PlayerPrefs.SetInt("CheckpointActivated", 1);
+        checkpointActivated = true;
     }
 
     public void TakeDamage(int damageValue)
@@ -70,32 +95,39 @@ public class Player : MonoBehaviour
         AudioManager.Instance.Play("Injury");
         spriteRenderer.color = DamagedColor;
         VignetteImage?.gameObject.SetActive(true);
-		Invoke(nameof(OriginalColor), 0.2f);
+        Invoke(nameof(OriginalColor), 0.2f);
         currentHP -= damageValue;
         currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
 
         if (currentHP <= 0)
         {
-            SceneManager.LoadScene("Retry");
+            if (checkpointActivated)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else
+            {
+                SceneManager.LoadScene("Retry");
+            }
         }
     }
 
     void OriginalColor()
     {
-		VignetteImage?.gameObject.SetActive(false);
-		spriteRenderer.color = originalColor;
+        VignetteImage?.gameObject.SetActive(false);
+        spriteRenderer.color = originalColor;
     }
 
     public void ShowBloodParticle()
     {
         BloodParticleFx.Stop();
         BloodParticleFx.Play();
-	}
+    }
 
     public bool CanEat(Eatable eatable)
     {
         return Size >= eatable.Size || eatable.IgnoreSize;
-	}
+    }
 
     public void TryEat(Eatable eatable)
     {
@@ -108,7 +140,6 @@ public class Player : MonoBehaviour
             if (IsMaxGrow() == false)
             {
                 Grow(eatable.growRate);
-
             }
         }
     }
@@ -127,11 +158,11 @@ public class Player : MonoBehaviour
         // Optionally, adjust the camera size or other related attributes here
         StartCoroutine(AdjustCameraSize(1));
     }
+
     private void Grow(float value)
     {
         if (!IsMaxGrow())
         {
-            
             float previousSize = Size;
             float newSize = Mathf.Min(Size + value, maxGrow);
 
@@ -164,7 +195,7 @@ public class Player : MonoBehaviour
         {
             growthParticles.Play(); // Start playing the particle effect
             growthParticles.transform.localScale = Vector3.one * Size * 3;
-			Invoke("StopGrowthParticles", 2f); // Schedule the stopping of the particle system after 3 seconds
+            Invoke("StopGrowthParticles", 2f); // Schedule the stopping of the particle system after 3 seconds
         }
     }
 
@@ -172,7 +203,7 @@ public class Player : MonoBehaviour
     {
         if (growthParticles != null)
         {
-            growthParticles.Stop(); 
+            growthParticles.Stop();
         }
     }
 

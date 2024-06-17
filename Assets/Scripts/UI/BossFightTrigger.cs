@@ -13,9 +13,9 @@ public class BossFightTrigger : MonoBehaviour
     public GameObject player; // Reference to the player GameObject
     public BunnyBoss BunnyBoss;
     public TMPro.TextMeshProUGUI bossFightText;
-	public GameObject PlayerArrow;
+    public GameObject PlayerArrow;
 
-	private PlayerMovement playerMovement; // Reference to the player's movement script
+    private PlayerMovement playerMovement; // Reference to the player's movement script
     private bool hasBeenTriggered = false; // Flag to check if the trigger has already been activated
     private Animator playerAnimator;
 
@@ -25,7 +25,6 @@ public class BossFightTrigger : MonoBehaviour
     {
         boss.SetActive(false);
         bossHPBar.SetActive(false);
-        
 
         // Get the PlayerMovement component from the player GameObject
         if (player != null)
@@ -65,8 +64,8 @@ public class BossFightTrigger : MonoBehaviour
         targetTilemap.gameObject.SetActive(true);
         boss.SetActive(true);
         bossHPBar.SetActive(true);
-		PlayerArrow.SetActive(false);
-		AudioManager.Instance.Play("BossMusic");
+        PlayerArrow.SetActive(false);
+        AudioManager.Instance.Play("BossMusic");
 
         if (bossFightText != null)
         {
@@ -89,6 +88,13 @@ public class BossFightTrigger : MonoBehaviour
         {
             BunnyBoss.StartAttack();
             ReEnablePlayerMovement(); // Re-enable movement and animations immediately if there's no timeline
+        }
+
+        // Set checkpoint when the player triggers the boss fight
+        Player playerComponent = player.GetComponent<Player>();
+        if (playerComponent != null)
+        {
+            playerComponent.SetCheckpoint(player.transform.position);
         }
     }
 
@@ -120,10 +126,8 @@ public class BossFightTrigger : MonoBehaviour
     {
         if (timeline != null)
         {
-            
             timeline.stopped -= OnTimelineStopped;
         }
     }
-
-
 }
+

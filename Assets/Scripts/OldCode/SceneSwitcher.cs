@@ -21,5 +21,10 @@ public class SceneSwitcher : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName);
     }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("StartMenu");
+    }
 }
 
