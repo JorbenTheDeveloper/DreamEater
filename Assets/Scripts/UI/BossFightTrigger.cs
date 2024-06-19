@@ -90,12 +90,7 @@ public class BossFightTrigger : MonoBehaviour
             ReEnablePlayerMovement(); // Re-enable movement and animations immediately if there's no timeline
         }
 
-        // Set checkpoint when the player triggers the boss fight
-        Player playerComponent = player.GetComponent<Player>();
-        if (playerComponent != null)
-        {
-            playerComponent.SetCheckpoint(player.transform.position);
-        }
+        
     }
 
     private void OnTimelineStopped(PlayableDirector obj)
