@@ -39,12 +39,7 @@ public class WolfBossTrigger : MonoBehaviour
         hasBeenTriggered = true;
         TriggerBossFight();
 
-        // Set checkpoint when the player triggers the boss fight
-        Player playerComponent = player.GetComponent<Player>();
-        if (playerComponent != null)
-        {
-            playerComponent.SetCheckpoint(player.transform.position);
-        }
+        
     }
 
     private void TriggerBossFight()

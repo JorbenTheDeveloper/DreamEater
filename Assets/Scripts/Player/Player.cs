@@ -71,23 +71,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (currentHP <= 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-    }
+    
 
-    public void SetCheckpoint(Vector3 newCheckpoint)
-    {
-        checkpointPosition = newCheckpoint;
-        PlayerPrefs.SetFloat("CheckpointX", checkpointPosition.x);
-        PlayerPrefs.SetFloat("CheckpointY", checkpointPosition.y);
-        PlayerPrefs.SetFloat("CheckpointZ", checkpointPosition.z);
-        PlayerPrefs.SetInt("CheckpointActivated", 1);
-        checkpointActivated = true;
-    }
+    
 
     public void TakeDamage(int damageValue)
     {
@@ -101,14 +87,7 @@ public class Player : MonoBehaviour
 
         if (currentHP <= 0)
         {
-            if (checkpointActivated)
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
-            else
-            {
-                SceneManager.LoadScene("Retry");
-            }
+            SceneManager.LoadScene("Retry");
         }
     }
 
