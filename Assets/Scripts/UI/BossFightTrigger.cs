@@ -67,8 +67,6 @@ public class BossFightTrigger : MonoBehaviour
         PlayerArrow.SetActive(false);
         AudioManager.Instance.Play("BossMusic");
 
-
-
         if (bossFightText != null)
         {
             bossFightText.gameObject.SetActive(true);
@@ -93,10 +91,10 @@ public class BossFightTrigger : MonoBehaviour
         }
 
         // Set checkpoint when the player triggers the boss fight
-        Player playerComponent = other.GetComponent<Player>();
+        Player playerComponent = player.GetComponent<Player>();
         if (playerComponent != null)
         {
-            playerComponent.SetCheckpoint(other.transform.position);
+            playerComponent.SetCheckpoint(player.transform.position);
         }
     }
 
