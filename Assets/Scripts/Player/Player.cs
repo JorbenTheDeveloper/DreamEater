@@ -49,6 +49,17 @@ public class Player : MonoBehaviour
             Destroy(gameObject);
         else
             Instance = this;
+
+        // Load checkpoint position and state if it exists
+        if (PlayerPrefs.HasKey("CheckpointActivated") && PlayerPrefs.GetInt("CheckpointActivated") == 1)
+        {
+            float x = PlayerPrefs.GetFloat("CheckpointX");
+            float y = PlayerPrefs.GetFloat("CheckpointY");
+            float z = PlayerPrefs.GetFloat("CheckpointZ");
+            checkpointPosition = new Vector3(x, y, z);
+            transform.position = checkpointPosition;
+            checkpointActivated = true;
+        }
     }
 
     public void Start()
@@ -60,14 +71,22 @@ public class Player : MonoBehaviour
 
         StartCoroutine(AdjustCameraSize(1));
 
-        if (PlayerPrefs.HasKey("CheckpointActivated") && PlayerPrefs.GetInt("CheckpointActivated") == 1)
+        if (SceneManager.GetActiveScene().name == "LevelTwo")
         {
-            float x = PlayerPrefs.GetFloat("CheckpointX");
-            float y = PlayerPrefs.GetFloat("CheckpointY");
-            float z = PlayerPrefs.GetFloat("CheckpointZ");
-            checkpointPosition = new Vector3(x, y, z);
-            transform.position = checkpointPosition;
-            checkpointActivated = true;
+            ClearCheckpoint();
+        }
+        else
+        {
+            // Load checkpoint position and state if it exists
+            if (PlayerPrefs.HasKey("CheckpointActivated") && PlayerPrefs.GetInt("CheckpointActivated") == 1)
+            {
+                float x = PlayerPrefs.GetFloat("CheckpointX");
+                float y = PlayerPrefs.GetFloat("CheckpointY");
+                float z = PlayerPrefs.GetFloat("CheckpointZ");
+                checkpointPosition = new Vector3(x, y, z);
+                transform.position = checkpointPosition;
+                checkpointActivated = true;
+            }
         }
     }
 
@@ -110,6 +129,15 @@ public class Player : MonoBehaviour
                 SceneManager.LoadScene("Retry");
             }
         }
+    }
+
+    public void ClearCheckpoint()
+    {
+        PlayerPrefs.DeleteKey("CheckpointX");
+        PlayerPrefs.DeleteKey("CheckpointY");
+        PlayerPrefs.DeleteKey("CheckpointZ");
+        PlayerPrefs.DeleteKey("CheckpointActivated");
+        checkpointActivated = false;
     }
 
     void OriginalColor()
